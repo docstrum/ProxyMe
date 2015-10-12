@@ -1,0 +1,39 @@
+﻿@model IEnumerable<InstaSharp.Models.Media>
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Near Me</title>
+</head>
+<body>
+
+
+    @foreach (var item in Model)
+    {
+        if (item.Location != null)
+        {
+            <div>
+                <img src="@item.Images.Thumbnail.Url" />
+                <br />
+                @item.Location.Name - @item.Location.Latitude - @item.Location.Longitude
+                <br />
+                @item.CreatedTime
+            </div>
+        }
+        else
+        {
+            <div>
+                <img src="@item.Images.Thumbnail.Url" />
+            </div>
+        }
+
+    }
+
+</body>
+</html>
