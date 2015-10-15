@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<InstaSharp.Models.Media>
 
 @{
-    Layout = null;
+    ViewBag.Title = "Near Me";
 }
 
 <!DOCTYPE html>
@@ -12,28 +12,79 @@
     <title>Near Me</title>
 </head>
 <body>
-
-
-    @foreach (var item in Model)
-    {
-        if (item.Location != null)
-        {
-            <div>
-                <img src="@item.Images.Thumbnail.Url" />
-                <br />
-                @item.Location.Name - @item.Location.Latitude - @item.Location.Longitude
-                <br />
-                @item.CreatedTime
-            </div>
-        }
-        else
-        {
-            <div>
-                <img src="@item.Images.Thumbnail.Url" />
-            </div>
+    <script>
+        if (navigator.geolocation) {
+            //alert("Geo-Enabled");
+            navigator.geolocation.getCurrentPosition(showPosition, showError);
         }
 
-    }
+        function showPosition(position) {
+            var lat = position.coords.latitude;
+            var lon = position.coords.longitude;
+            $.ajax({
+                url: '@Html.Raw(Url.Action("NearMe2","Home"))',
+                type: 'POST',
+                alert: (lat),
+                data: {
+                    latitude: lat,
+                    longitude: lon
+                },
+                success: function (data) {
+                    $('#content').html(data);
+                }
 
+
+            });
+
+
+
+        }
+        function showError(error) {
+            switch (error.code) {
+                case error.PERMISSION_DENIED:
+                    alert("Unable to display accurate weather forcast, location denied.");
+                    break;
+                case error.POSITION_UNAVAILABLE:
+                    alert("Location information is unavailable.");
+                    break;
+                case error.TIMEOUT:
+                    alert("The request to get user location timed out.");
+                    break;
+                case error.UNKNOWN_ERROR:
+                    alert("An unknown error occurred.");
+                    break;
+            }
+        }
+    </script>
+
+
+        @foreach (var item in Model)
+        {
+            if (item.Location != null)
+            {
+                <div>
+                    <center>
+                        <img src="@item.Images.StandardResolution.Url" />
+                        <br />
+                        @item.Location.Name - (@item.Location.Latitude Latitude) - (@item.Location.Longitude Longitude)
+                        <br />
+                        @item.CreatedTime.AddHours(-4);
+                    </center>
+                </div>
+            }
+            else
+            {
+                <div>
+                    <center>
+                        <img src="@item.Images.StandardResolution'.Url" />
+                    </center>
+                </div>
+            }
+
+        }
+   
+    <div id="content">
+        @Html.Partial("NearMe2", Model)
+    </div>
 </body>
 </html>

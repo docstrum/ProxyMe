@@ -1,15 +1,16 @@
 ﻿@model InstaSharp.Models.UserInfo
 
-@{
-    Layout = null;
+@{ 
+    ViewBag.Title = "Authorizing/Getting Location";
 }
+
 
 <!DOCTYPE html>
 
 <html>
 <head>
     <meta name="viewport" content="width=device-width" />
-    <title>Index</title>
+    <title>My Feed</title>
 </head>
 <body>
     <div>
@@ -41,20 +42,6 @@
             </dd>
         </dl>
     </div>
-    <div>
-        <p>
-            @Html.ActionLink("My Feed", "MyFeed")
-        </p>
-    </div>
-    <div>
-        <p>
-            @Html.ActionLink("My Posts", "MyPosts")
-        </p>
-    </div>
-    <div>
-        <p>
-            @Html.ActionLink("Near Me", "NearMe")
-        </p>
-    </div>
+    
 </body>
 </html>

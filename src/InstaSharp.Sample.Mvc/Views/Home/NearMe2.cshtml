@@ -1,0 +1,29 @@
+﻿
+@model IEnumerable<InstaSharp.Models.Media>
+
+@{ Layout = null; }
+
+    @foreach (var item in Model)
+    {
+        if (item.Location != null)
+        {
+            <div>
+                <center>
+                    <img src="@item.Images.StandardResolution.Url" />
+                    <br />
+                    @item.Location.Name - (@item.Location.Latitude Latitude) - (@item.Location.Longitude Longitude)
+                    <br />
+                    @item.CreatedTime.AddHours(-4);
+                </center>
+            </div>
+        }
+        else
+        {
+            <div>
+                <center>
+                    <img src="@item.Images.StandardResolution'.Url" />
+                </center>
+            </div>
+        }
+
+    }

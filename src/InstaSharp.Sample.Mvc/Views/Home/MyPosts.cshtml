@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<InstaSharp.Models.Media>
 
 @{
-    Layout = null;
+    ViewBag.Title = "My Posts";
 }
 
 <!DOCTYPE html>
@@ -19,15 +19,17 @@
         if (item.Location != null)
         {
             <div>
-                <img src="@item.Images.Thumbnail.Url" />
-                <br />
-                @item.Location.Name - @item.Location.Latitude - @item.Location.Longitude
+                <center>
+                    <img src="@item.Images.StandardResolution.Url" />
+                    <br />
+                    @item.Location.Name - (@item.Location.Latitude Latitude, @item.Location.Longitude Longitude)
+                </center>
             </div>
         }
         else
         {
             <div>
-                <img src="@item.Images.Thumbnail.Url" />
+                <center><img src="@item.Images.StandardResolution.Url" /></center>
             </div>
         }
 

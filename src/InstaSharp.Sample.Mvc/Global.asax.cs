@@ -13,6 +13,7 @@ namespace InstaSharp.Sample.Mvc
         {
             AreaRegistration.RegisterAllAreas();
             RouteConfig.RegisterRoutes(RouteTable.Routes);
+            //ValueProviderFactories.Factories.Add(new JsonValueProviderFactory());
         }
     }
 }

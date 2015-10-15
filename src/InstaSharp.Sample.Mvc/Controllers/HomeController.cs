@@ -10,6 +10,7 @@ namespace InstaSharp.Sample.Mvc.Controllers
         static string clientId = "f14134ed24754b658b616e1ce855d350";
         static string clientSecret = "1262e676faeb4eb0a3b42928c4fc3147";
         static string redirectUri = "http://localhost:5969/Home/OAuth";
+        //static string redirectUri = "http://www.proxme.net/Home/OAuth";
 
         InstagramConfig config = new InstagramConfig(clientId, clientSecret, redirectUri, "");
 
@@ -21,6 +22,10 @@ namespace InstaSharp.Sample.Mvc.Controllers
             if (oAuthResponse == null)
             {
                 return RedirectToAction("Login");
+            }
+            else
+            {
+                return RedirectToAction("NearMe");
             }
 
             return View(oAuthResponse.User);            
@@ -68,6 +73,7 @@ namespace InstaSharp.Sample.Mvc.Controllers
 
             return View(feed.Data);
         }
+        
         public async Task<ActionResult> NearMe()
         {
             var oAuthResponse = Session["InstaSharp.AuthInfo"] as OAuthResponse;
@@ -77,13 +83,45 @@ namespace InstaSharp.Sample.Mvc.Controllers
                 return RedirectToAction("Login");
             }
 
-            var users = new Endpoints.Users(config, oAuthResponse);
             var locations = new Endpoints.Media(config, oAuthResponse);
 
-           
-            var locFeed = await locations.Search(41.285765, -81.8548987, 5000, System.DateTime.Now - System.TimeSpan.FromDays(1), System.DateTime.Now);
-            var feed = await users.Feed(null, null, null);
+            var geo = new Endpoints.Geographies(config, oAuthResponse);
 
+            var start = System.DateTime.Now - System.TimeSpan.FromDays(1);
+
+            var end = System.DateTime.Now;
+
+            var locFeed = await locations.Search(49,-81, 5000, start, end); //41.285765, -81.8548987
+
+            //var goFeed = await geo.Recent()
+            ModelState.Clear();
+            return View(locFeed.Data);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> NearMe2(double latitude, double longitude)
+        {
+            ModelState.Clear();
+
+            var oAuthResponse = Session["InstaSharp.AuthInfo"] as OAuthResponse;
+
+            if (oAuthResponse == null)
+            {
+                return RedirectToAction("Login");
+            }
+
+            var locations = new Endpoints.Media(config, oAuthResponse);
+
+            var geo = new Endpoints.Geographies(config, oAuthResponse);
+
+            var start = System.DateTime.Now - System.TimeSpan.FromDays(1);
+
+            var end = System.DateTime.Now;
+
+            var locFeed = await locations.Search(latitude, longitude, 5000, start, end);
+
+            //var goFeed = await geo.Recent()
+            
 
             return View(locFeed.Data);
         }
