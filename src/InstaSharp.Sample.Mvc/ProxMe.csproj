@@ -163,6 +163,8 @@
     <Content Include="Views\Home\NearMe2.cshtml" />
     <Content Include="Views\Home\WhoIsNear.cshtml" />
     <Content Include="Views\Home\WhoIsNear2.cshtml" />
+    <Content Include="Views\Home\FullInfo.cshtml" />
+    <Content Include="Views\Home\FullInfo2.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
