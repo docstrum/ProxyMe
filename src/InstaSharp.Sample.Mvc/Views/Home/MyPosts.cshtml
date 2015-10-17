@@ -1,5 +1,4 @@
-﻿@model IEnumerable<InstaSharp.Models.Media>
-
+﻿@model IEnumerable<InstaSharp.Sample.Mvc.Models.WallElement>
 @{
     ViewBag.Title = "My Posts";
 }
@@ -14,32 +13,66 @@
 <body>
 
 
-    @foreach (var item in Model)
-    {
-        if (item.Location != null)
+        @foreach (var item in Model)
         {
-            <div>
+            if (item.Location != null)
+            {
+            <div class=".col-md-4">
                 <center>
-                    <img src="@item.Images.StandardResolution.Url" />
+                    <table border="0" width="600" cellpadding="10" cellspacing="0">
+                        <tr>
+                            <td width="50">
+                                Posted:
+                            </td>
+                            <td width="250">
+                                <b>@item.CreatedTime.AddHours(-4)</b>
+                            </td>
+                            <td width="50">
+                                Location:
+                            </td>
+                            <td width="220">
+                                <b>@item.Location</b> @(item.Distance > 0 ? String.Format("<br>{0} Miles Away", item.Distance) : "")
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="4">
+                                <img src="@item.StandardResolutionUrl" width="600" />
+                            </td>
+                        </tr>
+                    </table>
                     <br />
-                    @item.User.Username - @item.User.FullName - @item.Location.Name
-                    <br />
-                    (@item.Location.Latitude Latitude) - (@item.Location.Longitude Longitude)
-                    <br />
-                    @item.CreatedTime.AddHours(-4);
                 </center>
             </div>
         }
         else
         {
-            <div>
-                <center>
-                    <img src="@item.Images.StandardResolution.Url" />
-                    @item.User.Username - @item.User.FullName
-                    <br />
-                    @item.CreatedTime.AddHours(-4);
-                </center>
-            </div>
+        <div class=".col-md-4">
+            <center>
+                <table border="0" width="600" cellpadding="10" cellspacing="0">
+                    <tr>
+                        <td width="100">
+                            Posted:
+                        </td>
+                        <td width="200">
+                            <b>@item.CreatedTime.AddHours(-4)</b>
+                            
+                        </td>
+                        <td width="100">
+                            &nbsp;                            
+                        </td>
+                        <td width="200">
+                            &nbsp;
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="4">
+                            <img src="@item.StandardResolutionUrl" width="600" />
+                        </td>
+                    </tr>
+                </table>
+                <br />
+            </center>
+        </div>
         }
 
     }

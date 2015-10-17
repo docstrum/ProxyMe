@@ -1,27 +1,60 @@
-﻿
-@model IEnumerable<InstaSharp.Models.Media>
+﻿@model IEnumerable<InstaSharp.Sample.Mvc.Models.WallElement>
 
-@{ 
-    Layout = null;
-    //var temp = ViewBag.latitude;
-    //var newModel = Model.OrderByDescending(a => (a.Location.Latitude - ViewBag.latitude) + (a.Location.Longitude - ViewBag.longitude));
-    //.ThenBy(o => o.Location.Longitude - ViewBag.longitude );
-}
+@{ Layout = null; }
 
-@foreach (var item in Model)
+@if (Model != null)
 {
+    foreach (var item in Model)
+    {
+        <div class=".col-md-4">
+            <center>
+                <table border="0" width="400" cellpadding="4" cellspacing="0">
+                    <tr>
+                        <td width="50">
+                            <p style="font-size:8pt;">
+                                User Name:
+                                <br />
+                                Full Name:
+                                <br />
+                                Posted:
+                            </p>
+                        </td>
+                        <td width="150">
+                            <p style="font-size:8pt;">
+                                <b>@item.Username</b>
+                                <br />
+                                <b>@item.FullName</b>
+                                <br />
+                                <b>@item.CreatedTime.AddHours(-4)</b>
+                            </p>
+                        </td>
+                        <td width="200">
+                            <p style="font-size:8pt;">
+                                Location: <b>@item.Location</b>
+                                <br />
+                                @item.Distance Miles Away
+                                <br />
+                                &nbsp;
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="4">
+                            <img src="@item.ProfilePictureUrl" width="400" />
+                        </td>
+                    </tr>
+                </table>
+                <br />
+            </center>
+        </div>
 
+    }
+}
+else
+{
     <div>
         <center>
-            <img src="@item.User.ProfilePicture" />
-            <br />
-            @item.User.Username - @item.User.FullName - @item.Location.Name
-            <br />
-            (@item.Location.Latitude Latitude) - (@item.Location.Longitude Longitude)
-            <br />
-            @item.CreatedTime.AddHours(-4);
+            Your Browser Has GeoLocation Disabled...
         </center>
     </div>
-
-
 }

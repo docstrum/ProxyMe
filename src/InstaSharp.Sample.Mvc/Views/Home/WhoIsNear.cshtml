@@ -1,4 +1,4 @@
-﻿@model IEnumerable<InstaSharp.Models.Media>
+﻿@model IEnumerable<InstaSharp.Sample.Mvc.Models.WallElement>
 
 @{
     ViewBag.Title = "Who Is Near";
@@ -14,35 +14,38 @@
 <body>
     <script>
         if (navigator.geolocation) {
-            //alert("Geo-Enabled");
-            navigator.geolocation.getCurrentPosition(showPosition, showError);
+            navigator.geolocation.getCurrentPosition(showPosition, showError, { maximumAge: 75000, timeout: 10000 });
         }
-
+        else {
+            $('#wait').hide();
+            $('#nogeo').show();
+        }
         function showPosition(position) {
             var lat = position.coords.latitude;
             var lon = position.coords.longitude;
-            $.ajax({
-                url: '@Html.Raw(Url.Action("WhoIsNear2","Home"))',
-                type: 'POST',
-                alert: (lat),
-                data: {
-                    latitude: lat,
-                    longitude: lon
-                },
-                success: function (data) {
-                    $('#content').html(data);
-                }
-
-
-            });
-
-
-
+            $.ajax(
+                {
+                    url: '@Html.Raw(Url.Action("WhoIsNear2","Home"))',
+                    type: 'POST',
+                    alert: (lat),
+                    data: {
+                        latitude: lat,
+                        longitude: lon
+                    },
+                    success: function (data) {
+                        $('#content').html(data);
+                        $('#wait').hide();
+                        $('#content').show();
+                    }
+                });
         }
         function showError(error) {
+            $('#wait').hide();
+            $('#nogeo').show();
+            return;
             switch (error.code) {
                 case error.PERMISSION_DENIED:
-                    alert("Unable to display accurate weather forcast, location denied.");
+                    alert("Permission to your location was denied.");
                     break;
                 case error.POSITION_UNAVAILABLE:
                     alert("Location information is unavailable.");
@@ -57,27 +60,24 @@
         }
     </script>
 
-    @if (Model != null && Model.Count() > 0)
-    {
-        foreach (var item in Model)
-        {
-            <div>
-                <center>
-                    <img src="@item.User.ProfilePicture" />
-                    <br />
-                    @item.User.Username - @item.User.FullName - @item.Location.Name
-                    <br />
-                    (@item.Location.Latitude Latitude) - (@item.Location.Longitude Longitude)
-                    <br />
-                    @item.CreatedTime.AddHours(-4);
-                </center>
-            </div>
+    <div id="wait">
+        <center>
+            <br /><br />
+            Please wait...
+            <br />
+        </center>
+    </div>
 
-        }
-    }
-
-    <div id="content">
+    <div id="content" hidden="true">
         @Html.Partial("WhoIsNear2", Model)
+    </div>
+
+    <div id="nogeo" hidden="true">
+        <center>
+            <br /><br />
+            Geolocation is disabled for your browser. iPhone users go to Settings/Privacy/Location/Safari and change setting from <i>Never</i> to <i>By Application</i>.
+            <br />
+        </center>
     </div>
 </body>
 </html>

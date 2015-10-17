@@ -48,7 +48,29 @@ namespace InstaSharp.Sample.Mvc.Controllers
             }
             var users = new Endpoints.Users(config, oAuthResponse);
             var feed = await users.Feed(null, null, null);
-            return View(feed.Data);
+            var posts = new List<WallElement>();
+            foreach (var post in feed.Data)
+            {
+                //var distance = CalculateDistance(latitude, post.Location.Latitude, longitude, post.Location.Longitude);
+                posts.Add(new WallElement()
+                {
+                    CreatedTime = post.CreatedTime.ToLocalTime(),
+                    FullName = post.User.FullName,
+                    Id = post.Id,
+                    Location = (post.Location != null ? post.Location.Name : null),
+                    LocationId = (post.Location != null ? post.Location.Id : 0),
+                    Longitude = 0, //post.Location.Longitude,
+                    Latitude = 0, //post.Location.Latitude,
+                    ProfilePictureUrl = post.User.ProfilePicture,
+                    Distance = 0, //distance,
+                    StandardResolutionUrl = post.Images.StandardResolution.Url,
+                    LowResoltionUrl = post.Images.LowResolution.Url,
+                    ThumbnailUrl = post.Images.Thumbnail.Url,
+                    Username = post.User.Username
+                });
+            }
+            posts = posts.OrderBy(x => x.Distance).ToList();
+            return View(posts);
         }
 
         public async Task<ActionResult> MyPosts()
@@ -60,7 +82,29 @@ namespace InstaSharp.Sample.Mvc.Controllers
             }
             var users = new Endpoints.Users(config, oAuthResponse);
             var feed = await users.RecentSelf();
-            return View(feed.Data);
+            var posts = new List<WallElement>();
+            foreach (var post in feed.Data)
+            {
+                //var distance = CalculateDistance(latitude, post.Location.Latitude, longitude, post.Location.Longitude);
+                posts.Add(new WallElement()
+                {
+                    CreatedTime = post.CreatedTime.ToLocalTime(),
+                    FullName = post.User.FullName,
+                    Id = post.Id,
+                    Location = (post.Location != null ? post.Location.Name : null),
+                    LocationId = (post.Location != null ? post.Location.Id : 0),
+                    Longitude = 0, //post.Location.Longitude,
+                    Latitude = 0, //post.Location.Latitude,
+                    ProfilePictureUrl = post.User.ProfilePicture,
+                    Distance = 0, //distance,
+                    StandardResolutionUrl = post.Images.StandardResolution.Url,
+                    LowResoltionUrl = post.Images.LowResolution.Url,
+                    ThumbnailUrl = post.Images.Thumbnail.Url,
+                    Username = post.User.Username
+                });
+            }
+            posts = posts.OrderBy(x => x.Distance).ToList();
+            return View(posts);
         }
 
         public async Task<ActionResult> NearMe()
@@ -75,7 +119,6 @@ namespace InstaSharp.Sample.Mvc.Controllers
             var geo = new Endpoints.Geographies(config, oAuthResponse);
             var start = System.DateTime.Now - System.TimeSpan.FromDays(1);
             var end = System.DateTime.Now;
-            //var locFeed = await locations.Search(49, -81, 5000, start, end); //41.285765, -81.8548987
             var posts = new List<WallElement>();
             return View(posts);
         }
@@ -134,10 +177,8 @@ namespace InstaSharp.Sample.Mvc.Controllers
             var geo = new Endpoints.Geographies(config, oAuthResponse);
             var start = System.DateTime.Now - System.TimeSpan.FromDays(1);
             var end = System.DateTime.Now;
-            var locFeed = await locations.Search(49, -81, 5000, start, end); //41.285765, -81.8548987
-            //var goFeed = await geo.Recent()
-            ModelState.Clear();
-            return View(locFeed.Data);
+            var posts = new List<WallElement>();
+            return View(posts);
         }
 
         [HttpPost]
@@ -154,9 +195,29 @@ namespace InstaSharp.Sample.Mvc.Controllers
             var start = System.DateTime.Now - System.TimeSpan.FromDays(1);
             var end = System.DateTime.Now;
             var locFeed = await locations.Search(latitude, longitude, 5000, start, end);
-            ViewBag.latitude = System.Convert.ToDecimal(latitude);
-            ViewBag.longitude = System.Convert.ToDecimal(longitude);
-            return View(locFeed.Data);
+            var posts = new List<WallElement>();
+            foreach (var post in locFeed.Data)
+            {
+                var distance = CalculateDistance(latitude, post.Location.Latitude, longitude, post.Location.Longitude);
+                posts.Add(new WallElement()
+                {
+                    CreatedTime = post.CreatedTime.ToLocalTime(),
+                    FullName = post.User.FullName,
+                    Id = post.Id,
+                    Location = post.Location.Name,
+                    LocationId = post.Location.Id,
+                    Longitude = post.Location.Longitude,
+                    Latitude = post.Location.Latitude,
+                    ProfilePictureUrl = post.User.ProfilePicture,
+                    Distance = distance,
+                    StandardResolutionUrl = post.Images.StandardResolution.Url,
+                    LowResoltionUrl = post.Images.LowResolution.Url,
+                    ThumbnailUrl = post.Images.Thumbnail.Url,
+                    Username = post.User.Username
+                });
+            }
+            posts = posts.OrderBy(x => x.Distance).ToList();
+            return View(posts);
         }
 
         public async Task<ActionResult> OAuth(string code)
