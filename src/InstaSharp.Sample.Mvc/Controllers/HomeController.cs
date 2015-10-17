@@ -1,6 +1,8 @@
 ﻿using InstaSharp.Models.Responses;
+using InstaSharp.Sample.Mvc.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Linq;
 using System.Web.Mvc;
 
 namespace InstaSharp.Sample.Mvc.Controllers
@@ -28,7 +30,7 @@ namespace InstaSharp.Sample.Mvc.Controllers
                 return RedirectToAction("NearMe");
             }
 
-            return View(oAuthResponse.User);            
+            return View(oAuthResponse.User);
         }
 
         public ActionResult Login()
@@ -52,9 +54,9 @@ namespace InstaSharp.Sample.Mvc.Controllers
             }
 
             var users = new Endpoints.Users(config, oAuthResponse);
-            
+
             var feed = await users.Feed(null, null, null);
-            
+
             return View(feed.Data);
         }
 
@@ -73,7 +75,7 @@ namespace InstaSharp.Sample.Mvc.Controllers
 
             return View(feed.Data);
         }
-        
+
         public async Task<ActionResult> NearMe()
         {
             var oAuthResponse = Session["InstaSharp.AuthInfo"] as OAuthResponse;
@@ -91,11 +93,11 @@ namespace InstaSharp.Sample.Mvc.Controllers
 
             var end = System.DateTime.Now;
 
-            var locFeed = await locations.Search(49,-81, 5000, start, end); //41.285765, -81.8548987
+            //var locFeed = await locations.Search(49, -81, 5000, start, end); //41.285765, -81.8548987
 
-            //var goFeed = await geo.Recent()
-            ModelState.Clear();
-            return View(locFeed.Data);
+            var posts = new List<WallElement>();
+
+            return View(posts);
         }
 
         [HttpPost]
@@ -120,12 +122,91 @@ namespace InstaSharp.Sample.Mvc.Controllers
 
             var locFeed = await locations.Search(latitude, longitude, 5000, start, end);
 
-            //var goFeed = await geo.Recent()
-            
+            var posts = new List<WallElement>();
 
+            foreach (var post in locFeed.Data)
+            {
+                var distance = CalculateDistance(latitude, post.Location.Latitude, longitude, post.Location.Longitude);
+
+
+                posts.Add(new WallElement()
+                {
+                    CreatedTime = post.CreatedTime.ToLocalTime(),
+                    FullName = post.User.FullName,
+                    Id = post.Id,
+                    Location = post.Location.Name,
+                    LocationId = post.Location.Id,
+                    Longitude = post.Location.Longitude,
+                    Latitude = post.Location.Latitude,
+                    ProfilePictureUrl = post.User.ProfilePicture,
+                    Distance = distance,
+                    StandardResolutionUrl = post.Images.StandardResolution.Url,
+                    LowResoltionUrl = post.Images.LowResolution.Url,
+                    ThumbnailUrl = post.Images.Thumbnail.Url,
+                    Username = post.User.Username
+
+                });
+            }
+
+            posts = posts.OrderBy(x => x.Distance).ToList();
+
+            return View(posts);
+        }
+
+        public async Task<ActionResult> WhoIsNear()
+        {
+            var oAuthResponse = Session["InstaSharp.AuthInfo"] as OAuthResponse;
+
+            if (oAuthResponse == null)
+            {
+                return RedirectToAction("Login");
+            }
+
+            var locations = new Endpoints.Media(config, oAuthResponse);
+
+            var geo = new Endpoints.Geographies(config, oAuthResponse);
+
+            var start = System.DateTime.Now - System.TimeSpan.FromDays(1);
+
+            var end = System.DateTime.Now;
+
+            var locFeed = await locations.Search(49, -81, 5000, start, end); //41.285765, -81.8548987
+
+            //var goFeed = await geo.Recent()
+            ModelState.Clear();
             return View(locFeed.Data);
         }
 
+        [HttpPost]
+        public async Task<ActionResult> WhoIsNear2(double latitude, double longitude)
+        {
+            ModelState.Clear();
+
+            var oAuthResponse = Session["InstaSharp.AuthInfo"] as OAuthResponse;
+
+            if (oAuthResponse == null)
+            {
+                return RedirectToAction("Login");
+            }
+
+            var locations = new Endpoints.Media(config, oAuthResponse);
+
+            var geo = new Endpoints.Geographies(config, oAuthResponse);
+
+            var start = System.DateTime.Now - System.TimeSpan.FromDays(1);
+
+            var end = System.DateTime.Now;
+
+            var locFeed = await locations.Search(latitude, longitude, 5000, start, end);
+
+
+            //var goFeed = await geo.Recent()
+
+            ViewBag.latitude = System.Convert.ToDecimal(latitude);
+            ViewBag.longitude = System.Convert.ToDecimal(longitude);
+
+            return View(locFeed.Data);
+        }
 
         public async Task<ActionResult> OAuth(string code)
         {
@@ -143,6 +224,21 @@ namespace InstaSharp.Sample.Mvc.Controllers
 
             // all done, lets redirect to the home controller which will send some initial data to the app
             return RedirectToAction("Index");
+        }
+
+        public double CalculateDistance(double Lat1, double Lat2, double Lon1, double Lon2)
+        {
+            var lat1 = Lat1 * System.Math.PI / 180.0;
+            var lon1 = Lon1 * System.Math.PI / 180.0;
+            var lat2 = Lat2 * System.Math.PI / 180.0;
+            var lon2 = Lon2 * System.Math.PI / 180.0;
+            var dlat = lat2 - lat1;
+            var dlon = lon2 - lon1;
+            var a = System.Math.Pow(System.Math.Sin(dlat / 2), 2) + System.Math.Cos(lat1) * System.Math.Cos(lat2) * System.Math.Pow(System.Math.Sin(dlon / 2), 2);
+            var c = 2 * System.Math.Atan2(System.Math.Sqrt(a), System.Math.Sqrt(1 - a));
+            var d = 3961 * c; //using miles 6373 using km
+            var distance = System.Math.Round(d * 100) / 100;
+            return distance; 
         }
     }
 }

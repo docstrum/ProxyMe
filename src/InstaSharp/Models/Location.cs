@@ -17,14 +17,14 @@ namespace InstaSharp.Models {
         /// <value>
         /// The latitude.
         /// </value>
-        public decimal Latitude { get; set; }
+        public double Latitude { get; set; }
         /// <summary>
         /// Gets or sets the longitude.
         /// </summary>
         /// <value>
         /// The longitude.
         /// </value>
-        public decimal Longitude { get; set; }
+        public double Longitude { get; set; }
         /// <summary>
         /// Gets or sets the name.
         /// </summary>

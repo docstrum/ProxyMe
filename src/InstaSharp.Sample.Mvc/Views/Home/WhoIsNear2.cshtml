@@ -1,0 +1,27 @@
+﻿
+@model IEnumerable<InstaSharp.Models.Media>
+
+@{ 
+    Layout = null;
+    //var temp = ViewBag.latitude;
+    //var newModel = Model.OrderByDescending(a => (a.Location.Latitude - ViewBag.latitude) + (a.Location.Longitude - ViewBag.longitude));
+    //.ThenBy(o => o.Location.Longitude - ViewBag.longitude );
+}
+
+@foreach (var item in Model)
+{
+
+    <div>
+        <center>
+            <img src="@item.User.ProfilePicture" />
+            <br />
+            @item.User.Username - @item.User.FullName - @item.Location.Name
+            <br />
+            (@item.Location.Latitude Latitude) - (@item.Location.Longitude Longitude)
+            <br />
+            @item.CreatedTime.AddHours(-4);
+        </center>
+    </div>
+
+
+}

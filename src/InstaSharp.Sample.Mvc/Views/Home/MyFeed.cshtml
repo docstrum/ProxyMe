@@ -22,14 +22,23 @@
                 <center>
                     <img src="@item.Images.StandardResolution.Url" />
                     <br />
-                    @item.Location.Name - (@item.Location.Latitude Latitude, @item.Location.Longitude Longitude)
+                    @item.User.Username - @item.User.FullName - @item.Location.Name
+                    <br />
+                    (@item.Location.Latitude Latitude) - (@item.Location.Longitude Longitude)
+                    <br />
+                    @item.CreatedTime.AddHours(-4);
                 </center>
             </div>
         }
         else
         {
             <div>
-                <center><img src="@item.Images.StandardResolution.Url" /></center>
+                <center>
+                    <img src="@item.Images.StandardResolution.Url" />
+                    @item.User.Username - @item.User.FullName
+                    <br />
+                    @item.CreatedTime.AddHours(-4);
+                </center>
             </div>
         }
 
