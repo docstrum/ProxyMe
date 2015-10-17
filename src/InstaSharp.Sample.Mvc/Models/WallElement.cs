@@ -23,4 +23,20 @@ namespace InstaSharp.Sample.Mvc.Models
         public double Distance { get; set; }
     }
 
+    class WallElementComparer : IEqualityComparer<WallElement>
+    {
+        public bool Equals(WallElement x, WallElement y)
+        {
+            return
+                x.Username == y.Username &&
+                x.FullName == y.FullName;
+        }
+
+        public int GetHashCode(WallElement obj)
+        {
+            return obj.ProfilePictureUrl.GetHashCode();
+        }
+
+    }
+
 }

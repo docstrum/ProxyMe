@@ -217,7 +217,8 @@ namespace InstaSharp.Sample.Mvc.Controllers
                 });
             }
             posts = posts.OrderBy(x => x.Distance).ToList();
-            return View(posts);
+            var compare = new WallElementComparer();
+            return View(posts.Distinct(compare));
         }
 
         public async Task<ActionResult> OAuth(string code)
