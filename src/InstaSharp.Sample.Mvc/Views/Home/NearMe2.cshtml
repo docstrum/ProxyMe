@@ -9,12 +9,12 @@
         <div class=".col-md-4">
             <center>
                 <table border="0" width="600" cellpadding="10" cellspacing="0">
-                    <tr> 
+                    <tr>
                         <td width="100">
                             <img src="@item.ProfilePictureUrl" width="100" />
                         </td>
                         <td width="100">
-                            User Name: 
+                            User Name:
                             <br />
                             Full Name:
                             <br />
@@ -37,11 +37,57 @@
                     </tr>
                     <tr>
                         <td colspan="4">
-                            <img src="@item.StandardResolutionUrl" width="600" />
+                            @if (string.IsNullOrWhiteSpace(item.VideoUrl))
+                            {
+                                <img src="@item.StandardResolutionUrl" width="600" />
+                            }
+                            else
+                            {
+
+                                <style>
+                                    .image-wrap {
+                                        position: relative;
+                                        display: inline-block;
+                                    }
+
+                                    .play-button {
+                                        position: absolute;
+                                        width: 60px;
+                                        height: 60px;
+                                        background-color: rgba(0,0,0,0.25);
+                                        border-radius: 100%;
+                                        top: 50%;
+                                        left: 50%;
+                                        margin: -30px 0 0 -30px;
+                                        cursor: pointer;
+                                    }
+
+                                        .play-button:after {
+                                            content: '';
+                                            display: block;
+                                            position: absolute;
+                                            left: 22px;
+                                            top: 10px;
+                                            border-width: 20px;
+                                            border-style: solid;
+                                            border-color: transparent transparent transparent white;
+                                        }
+
+                                        .play-button:hover {
+                                            background-color: black;
+                                        }
+                                </style>
+                                <div class="image-wrap">
+                                    <a href="@item.VideoUrl" class="html5lightbox" data-width="600" data-height="600" title="@item.Username">
+                                        <img src="@item.StandardResolutionUrl" width="600" />
+                                        <div class="play-button"></div>
+                                    </a>
+                                </div>
+                            }
                         </td>
                     </tr>
                 </table>
-                <br />                
+                <br />
             </center>
         </div>
 

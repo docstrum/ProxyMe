@@ -20,7 +20,8 @@ namespace InstaSharp.Sample.Mvc.Models
         public string StandardResolutionUrl { get; set; }
         public string LowResoltionUrl { get; set; }
         public string ThumbnailUrl { get; set; }
-        public double Distance { get; set; }
+        public double Distance { get; set; } 
+        public string VideoUrl { get; set; }
     }
 
     class WallElementComparer : IEqualityComparer<WallElement>

@@ -66,7 +66,8 @@ namespace InstaSharp.Sample.Mvc.Controllers
                     StandardResolutionUrl = post.Images.StandardResolution.Url,
                     LowResoltionUrl = post.Images.LowResolution.Url,
                     ThumbnailUrl = post.Images.Thumbnail.Url,
-                    Username = post.User.Username
+                    Username = post.User.Username,
+                    VideoUrl = (post.Videos != null? post.Videos.StandardResolution.Url: "")
                 });
             }
             posts = posts.OrderBy(x => x.Distance).ToList();
@@ -100,7 +101,8 @@ namespace InstaSharp.Sample.Mvc.Controllers
                     StandardResolutionUrl = post.Images.StandardResolution.Url,
                     LowResoltionUrl = post.Images.LowResolution.Url,
                     ThumbnailUrl = post.Images.Thumbnail.Url,
-                    Username = post.User.Username
+                    Username = post.User.Username,
+                    VideoUrl = (post.Videos != null ? post.Videos.StandardResolution.Url : "")
                 });
             }
             posts = posts.OrderBy(x => x.Distance).ToList();
