@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<InstaSharp.Sample.Mvc.Models.WallElement>
 
 @{
-    ViewBag.Title = "My Feed";
+    ViewBag.Title = "Users Feed";
 }
 
 <!DOCTYPE html>
@@ -9,7 +9,7 @@
 <html>
 <head>
     <meta name="viewport" content="width=device-width" />
-    <title>My Feed</title>
+    <title>Users Feed</title>
 </head>
 <body>
 
@@ -23,20 +23,7 @@
                     <table border="0" width="400" cellpadding="10" cellspacing="0">
                         <tr>
                             <td width="100">
-                                <img src="@item.ProfilePictureUrl" width="100" onclick="$.ajax(
-                                                                                        {
-                    url: '@Html.Raw(Url.Action("UserFeed","Home"))',
-                    type: 'POST',
-                    alert: ('@item.Username'),
-                    data: {
-                        usercode: '@item.Username'
-                    },
-                    success: function (data) {
-                        $('#content').html(data);
-                        $('#wait').hide();
-                        $('#content').show();
-                    }
-                });" />
+                                <img src="@item.ProfilePictureUrl" width="100" />
                             </td>
                             <td width="100">
                                 User Name:

@@ -188,6 +188,7 @@
     <Content Include="Views\Home\WhoIsNear2.cshtml" />
     <Content Include="Views\Home\FullInfo.cshtml" />
     <Content Include="Views\Home\FullInfo2.cshtml" />
+    <Content Include="Views\Home\UserFeed.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -197,6 +198,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Images\temp\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

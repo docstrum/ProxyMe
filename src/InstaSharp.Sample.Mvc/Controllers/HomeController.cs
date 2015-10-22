@@ -4,6 +4,13 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Linq;
 using System.Web.Mvc;
+using System.Drawing;
+using System;
+using System.Net;
+using System.IO;
+using System.Drawing.Drawing2D;
+using System.Drawing.Imaging;
+using System.Web;
 
 namespace InstaSharp.Sample.Mvc.Controllers
 {
@@ -11,8 +18,8 @@ namespace InstaSharp.Sample.Mvc.Controllers
     {
         static string clientId = "f14134ed24754b658b616e1ce855d350";
         static string clientSecret = "1262e676faeb4eb0a3b42928c4fc3147";
-        //static string redirectUri = "http://localhost:5969/Home/OAuth";
-        static string redirectUri = "http://www.proxme.net/Home/OAuth";
+        static string redirectUri = "http://localhost:5969/Home/OAuth";
+        //static string redirectUri = "http://www.proxme.net/Home/OAuth";
 
         InstagramConfig config = new InstagramConfig(clientId, clientSecret, redirectUri, "");
 
@@ -51,7 +58,7 @@ namespace InstaSharp.Sample.Mvc.Controllers
             var posts = new List<WallElement>();
             foreach (var post in feed.Data)
             {
-                //var distance = CalculateDistance(latitude, post.Location.Latitude, longitude, post.Location.Longitude);
+                //var distance = (post.Location != null ? CalculateDistance(latitude, post.Location.Latitude, longitude, post.Location.Longitude) : 0);
                 posts.Add(new WallElement()
                 {
                     CreatedTime = post.CreatedTime.ToLocalTime(),
@@ -59,15 +66,15 @@ namespace InstaSharp.Sample.Mvc.Controllers
                     Id = post.Id,
                     Location = (post.Location != null ? post.Location.Name : null),
                     LocationId = (post.Location != null ? post.Location.Id : 0),
-                    Longitude = 0, //post.Location.Longitude,
-                    Latitude = 0, //post.Location.Latitude,
+                    Longitude = (post.Location != null ? post.Location.Longitude : 0),
+                    Latitude = (post.Location != null ? post.Location.Latitude : 0),
                     ProfilePictureUrl = post.User.ProfilePicture,
                     Distance = 0, //distance,
                     StandardResolutionUrl = post.Images.StandardResolution.Url,
                     LowResoltionUrl = post.Images.LowResolution.Url,
                     ThumbnailUrl = post.Images.Thumbnail.Url,
                     Username = post.User.Username,
-                    VideoUrl = (post.Videos != null? post.Videos.StandardResolution.Url: "")
+                    VideoUrl = (post.Videos != null ? post.Videos.StandardResolution.Url : "")
                 });
             }
             posts = posts.OrderBy(x => x.Distance).ToList();
@@ -220,7 +227,43 @@ namespace InstaSharp.Sample.Mvc.Controllers
             }
             posts = posts.OrderBy(x => x.Distance).ToList();
             var compare = new WallElementComparer();
+            var temp = CreateWall(posts);
             return View(posts.Distinct(compare));
+        }
+
+        public async Task<ActionResult> UserFeed(string usercode)
+        {
+            var oAuthResponse = Session["InstaSharp.AuthInfo"] as OAuthResponse;
+            if (oAuthResponse == null)
+            {
+                return RedirectToAction("Login");
+            }
+            var users = new Endpoints.Users(config, oAuthResponse);
+            var feed = await users.Recent(usercode);
+            var posts = new List<WallElement>();
+            foreach (var post in feed.Data)
+            {
+                //var distance = (post.Location != null ? CalculateDistance(latitude, post.Location.Latitude, longitude, post.Location.Longitude) : 0);
+                posts.Add(new WallElement()
+                {
+                    CreatedTime = post.CreatedTime.ToLocalTime(),
+                    FullName = post.User.FullName,
+                    Id = post.Id,
+                    Location = (post.Location != null ? post.Location.Name : null),
+                    LocationId = (post.Location != null ? post.Location.Id : 0),
+                    Longitude = (post.Location != null ? post.Location.Longitude : 0),
+                    Latitude = (post.Location != null ? post.Location.Latitude : 0),
+                    ProfilePictureUrl = post.User.ProfilePicture,
+                    Distance = 0, //distance,
+                    StandardResolutionUrl = post.Images.StandardResolution.Url,
+                    LowResoltionUrl = post.Images.LowResolution.Url,
+                    ThumbnailUrl = post.Images.Thumbnail.Url,
+                    Username = post.User.Username,
+                    VideoUrl = (post.Videos != null ? post.Videos.StandardResolution.Url : "")
+                });
+            }
+            posts = posts.OrderBy(x => x.Distance).ToList();
+            return View(posts);
         }
 
         public async Task<ActionResult> OAuth(string code)
@@ -243,7 +286,82 @@ namespace InstaSharp.Sample.Mvc.Controllers
             var c = 2 * System.Math.Atan2(System.Math.Sqrt(a), System.Math.Sqrt(1 - a));
             var d = 3961 * c; //use 6373 for km
             var distance = System.Math.Round(d * 100) / 100;
-            return distance; 
+            return distance;
+        }
+
+        private int imageWidth = 100, imageHeight = 100, maxWidth = 1000, maxHeight = 600, borderSize = 1;
+
+
+        private string CreateWall(List<WallElement> model)
+        {
+            //context.Response.ContentType = "image/jpg";
+            int rows = maxHeight / (imageHeight + 2 * borderSize);
+            int cols = maxWidth / (imageWidth + 2 * borderSize);
+            int total = rows * cols;
+            maxWidth = cols * (imageWidth + 2 * borderSize);
+            maxHeight = rows * (imageHeight + 2 * borderSize);
+            using (Bitmap img = new Bitmap(maxWidth, maxHeight))
+            {
+                List<String> listImg = GetProfileImages(model, total);
+                //In case no sufficient images, repeat images 
+                total = listImg.Count;
+                int row, col, x = 0, y = 0;
+                using (Graphics g = Graphics.FromImage(img))
+                {
+                    using (Pen pen = new Pen(Color.White, borderSize))
+                    {
+                        for (row = 0; row < rows; row++)
+                        {
+                            for (col = 0; col < cols; col++)
+                            {
+                                x = col * (imageWidth + borderSize * 2);
+                                y = row * (imageHeight + borderSize * 2);
+                                WebRequest req = WebRequest.Create(listImg[(row * cols + col) % total]);
+                                WebResponse response = req.GetResponse();
+                                Stream stream = response.GetResponseStream();
+                                Image webImg = Image.FromStream(stream);
+                                stream.Close();
+
+                                g.DrawImage(webImg, x + borderSize, y + borderSize, imageWidth, imageHeight);
+
+                                //pen.Alignment = System.Drawing.Drawing2D.PenAlignment.Inset;
+                                g.DrawRectangle(pen, x, y, imageWidth + 2 * borderSize - 1, imageHeight + 2 * borderSize - 1);
+                            }
+                        }
+                    }
+                    //Gradient effect
+                    if (cols > 3)
+                    {
+                        // Create back box brush
+                        Rectangle rect = new Rectangle(0, 0, imageWidth * 2, maxHeight);
+                        //left side gradient
+                        using (LinearGradientBrush lgBrush = new LinearGradientBrush(rect, Color.White, Color.Transparent, LinearGradientMode.Horizontal))
+                        {
+                            g.FillRectangle(lgBrush, rect);
+                        }
+                        //Right side gradient
+                        rect = new Rectangle(maxWidth - imageWidth * 2, 0, imageWidth * 2, maxHeight);
+                        using (LinearGradientBrush lgBrush = new LinearGradientBrush(rect, Color.Transparent, Color.White, LinearGradientMode.Horizontal))
+                        {
+                            g.FillRectangle(lgBrush, rect);
+                        }
+                    }
+                }
+                img.Save("c:\\temp\\test.jpg", ImageFormat.Jpeg);
+            }
+            return "";
+        }
+
+        private List<String> GetProfileImages(List<WallElement> record, int max)
+        {
+            List<String> listImg;
+            listImg = record
+                .OrderBy(x => Guid.NewGuid())
+                .Take(max)
+                .Select(x => new { x.StandardResolutionUrl }).ToList()
+                .Select(x => x.StandardResolutionUrl).ToList();
+            return listImg;
+
         }
     }
 }
