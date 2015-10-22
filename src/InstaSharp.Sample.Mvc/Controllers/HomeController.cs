@@ -289,7 +289,7 @@ namespace InstaSharp.Sample.Mvc.Controllers
             return distance;
         }
 
-        private int imageWidth = 100, imageHeight = 100, maxWidth = 1000, maxHeight = 600, borderSize = 1;
+        private int imageWidth = 200, imageHeight = 200, maxWidth = 2000, maxHeight = 2000, borderSize = 1;
 
 
         private string CreateWall(List<WallElement> model)
