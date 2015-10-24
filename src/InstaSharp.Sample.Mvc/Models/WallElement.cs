@@ -22,6 +22,15 @@ namespace InstaSharp.Sample.Mvc.Models
         public string ThumbnailUrl { get; set; }
         public double Distance { get; set; } 
         public string VideoUrl { get; set; }
+        public CellCoordinats Cell { get; set; }
+    }
+
+    public class CellCoordinats
+    {
+        public int startX { get; set; }
+        public int startY { get; set; }
+        public int endX { get; set; }
+        public int endY { get; set; }
     }
 
     class WallElementComparer : IEqualityComparer<WallElement>

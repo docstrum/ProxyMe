@@ -227,7 +227,7 @@ namespace InstaSharp.Sample.Mvc.Controllers
             }
             posts = posts.OrderBy(x => x.Distance).ToList();
             var compare = new WallElementComparer();
-            var temp = CreateWall(posts);
+            var temp = CreateWall(posts, oAuthResponse.User.Id.ToString());
             return View(posts.Distinct(compare));
         }
 
@@ -289,10 +289,10 @@ namespace InstaSharp.Sample.Mvc.Controllers
             return distance;
         }
 
-        private int imageWidth = 200, imageHeight = 200, maxWidth = 2000, maxHeight = 2000, borderSize = 1;
+        private int imageWidth = 240, imageHeight = 240, maxWidth = 2000, maxHeight = 2000, borderSize = 1;
 
 
-        private string CreateWall(List<WallElement> model)
+        private List<WallElement> CreateWall(List<WallElement> model, string userName)
         {
             //context.Response.ContentType = "image/jpg";
             int rows = maxHeight / (imageHeight + 2 * borderSize);
@@ -321,11 +321,10 @@ namespace InstaSharp.Sample.Mvc.Controllers
                                 Stream stream = response.GetResponseStream();
                                 Image webImg = Image.FromStream(stream);
                                 stream.Close();
-
                                 g.DrawImage(webImg, x + borderSize, y + borderSize, imageWidth, imageHeight);
-
                                 //pen.Alignment = System.Drawing.Drawing2D.PenAlignment.Inset;
                                 g.DrawRectangle(pen, x, y, imageWidth + 2 * borderSize - 1, imageHeight + 2 * borderSize - 1);
+                                
                             }
                         }
                     }
@@ -333,23 +332,40 @@ namespace InstaSharp.Sample.Mvc.Controllers
                     if (cols > 3)
                     {
                         // Create back box brush
-                        Rectangle rect = new Rectangle(0, 0, imageWidth * 2, maxHeight);
+                        Rectangle rect = new Rectangle(0, 0, imageWidth, maxHeight);
                         //left side gradient
                         using (LinearGradientBrush lgBrush = new LinearGradientBrush(rect, Color.White, Color.Transparent, LinearGradientMode.Horizontal))
                         {
                             g.FillRectangle(lgBrush, rect);
                         }
                         //Right side gradient
-                        rect = new Rectangle(maxWidth - imageWidth * 2, 0, imageWidth * 2, maxHeight);
+                        rect = new Rectangle(maxWidth - imageWidth, 0, imageWidth, maxHeight);
                         using (LinearGradientBrush lgBrush = new LinearGradientBrush(rect, Color.Transparent, Color.White, LinearGradientMode.Horizontal))
                         {
                             g.FillRectangle(lgBrush, rect);
                         }
                     }
+                    //Gradient effect
+                    if (rows > 3)
+                    {
+                        // Create back box brush
+                        Rectangle rect = new Rectangle(0, 0, maxWidth , imageHeight);
+                        //top gradient
+                        using (LinearGradientBrush lgBrush = new LinearGradientBrush(rect, Color.White, Color.Transparent, LinearGradientMode.Vertical))
+                        {
+                            g.FillRectangle(lgBrush, rect);
+                        }
+                        //bottom gradient
+                        rect = new Rectangle(0, maxHeight - imageHeight, maxWidth , imageHeight);
+                        using (LinearGradientBrush lgBrush = new LinearGradientBrush(rect, Color.Transparent, Color.White, LinearGradientMode.Vertical))
+                        {
+                            g.FillRectangle(lgBrush, rect);
+                        }
+                    }
                 }
-                img.Save("c:\\temp\\test.jpg", ImageFormat.Jpeg);
+                img.Save(Server.MapPath("~/Images/temp/" + userName + ".jpg"), ImageFormat.Jpeg);
             }
-            return "";
+            return model;
         }
 
         private List<String> GetProfileImages(List<WallElement> record, int max)
