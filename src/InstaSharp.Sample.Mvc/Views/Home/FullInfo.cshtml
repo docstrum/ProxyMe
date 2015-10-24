@@ -1,7 +1,86 @@
-﻿
+﻿@model IEnumerable<InstaSharp.Sample.Mvc.Models.WallElement>
+
 @{
-    ViewBag.Title = "FullInfo";
+    ViewBag.Title = "Test Wall";
 }
 
-<h2>FullInfo</h2>
+<!DOCTYPE html>
 
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Test Wall</title>
+</head>
+<body>
+    <script>
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(showPosition, showError, { maximumAge: 75000, timeout: 10000 });
+        }
+        else {
+            $('#wait').hide();
+            $('#nogeo').show();
+        }
+        function showPosition(position) {
+            var lat = position.coords.latitude;
+            var lon = position.coords.longitude;
+            $.ajax(
+                {
+                    url: '@Html.Raw(Url.Action("FullInfo2","Home"))',
+                    type: 'POST',
+                    alert: (lat),
+                    data: {
+                        latitude: lat,
+                        longitude: lon
+                    },
+                    success: function (data) {
+                        $('#content').html(data);
+                        $('#wait').hide();
+                        $('#content').show();
+                    }
+                });
+        }
+        function showError(error) {
+            $('#wait').hide();
+            $('#nogeo').show();
+            return;
+            switch (error.code) {
+                case error.PERMISSION_DENIED:
+                    alert("Permission to your location was denied.");
+                    break;
+                case error.POSITION_UNAVAILABLE:
+                    alert("Location information is unavailable.");
+                    break;
+                case error.TIMEOUT:
+                    alert("The request to get user location timed out.");
+                    break;
+                case error.UNKNOWN_ERROR:
+                    alert("An unknown error occurred.");
+                    break;
+            }
+        }
+    </script>
+
+    <div id="wait">
+        <center>
+            <br /><br />
+            Retrieving posts within a 3 mile radius.<br /><br />Please wait...
+            <br />
+        </center>
+    </div>
+
+    <div id="content" hidden>
+        <br /><br />
+        @Html.Partial("FullInfo2", Model)
+    </div>
+
+    <div id="nogeo" hidden>
+        <center>
+            <br /><br />
+            Geo-location is disabled for your browser. iPhone users go to Settings/Privacy/Location/Safari and change setting from <i>Never</i> to <i>While In Application</i>.
+            <br />
+        </center>
+    </div>
+
+</body>
+
+</html>

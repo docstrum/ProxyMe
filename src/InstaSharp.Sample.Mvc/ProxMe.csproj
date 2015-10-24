@@ -152,6 +152,7 @@
     <Content Include="html5lightbox\skins\default\nav-arrows-prev.png" />
     <Content Include="Images\Play1Pressed.png" />
     <Content Include="Images\ProxMe.jpg" />
+    <Content Include="Images\temp\test.jpg" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <None Include="Properties\PublishProfiles\ProxMe.Net.pubxml" />
@@ -198,7 +199,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Images\temp\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

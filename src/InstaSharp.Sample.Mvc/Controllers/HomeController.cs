@@ -57,7 +57,6 @@ namespace InstaSharp.Sample.Mvc.Controllers
             var posts = new List<WallElement>();
             foreach (var post in feed.Data)
             {
-                //var distance = (post.Location != null ? CalculateDistance(latitude, post.Location.Latitude, longitude, post.Location.Longitude) : 0);
                 posts.Add(new WallElement()
                 {
                     CreatedTime = post.CreatedTime.ToLocalTime(),
@@ -125,7 +124,7 @@ namespace InstaSharp.Sample.Mvc.Controllers
             }
             var locations = new Endpoints.Media(config, oAuthResponse);
             var geo = new Endpoints.Geographies(config, oAuthResponse);
-            var start = System.DateTime.Now - System.TimeSpan.FromDays(1);
+            var start = System.DateTime.Now - TimeSpan.FromDays(1);
             var end = System.DateTime.Now;
             var posts = new List<WallElement>();
             return View(posts);
@@ -183,7 +182,7 @@ namespace InstaSharp.Sample.Mvc.Controllers
             }
             var locations = new Endpoints.Media(config, oAuthResponse);
             var geo = new Endpoints.Geographies(config, oAuthResponse);
-            var start = DateTime.Now - System.TimeSpan.FromDays(1);
+            var start = DateTime.Now - TimeSpan.FromDays(1);
             var end = DateTime.Now;
             var posts = new List<WallElement>();
             return View(posts);
@@ -200,7 +199,7 @@ namespace InstaSharp.Sample.Mvc.Controllers
             }
             var locations = new Endpoints.Media(config, oAuthResponse);
             var geo = new Endpoints.Geographies(config, oAuthResponse);
-            var start = DateTime.Now - System.TimeSpan.FromDays(1);
+            var start = DateTime.Now - TimeSpan.FromDays(1);
             var end = DateTime.Now;
             var locFeed = await locations.Search(latitude, longitude, 5000, start, end);
             var posts = new List<WallElement>();
@@ -226,7 +225,6 @@ namespace InstaSharp.Sample.Mvc.Controllers
             }
             posts = posts.OrderBy(x => x.Distance).ToList();
             var compare = new WallElementComparer();
-            //var temp = CreateWall(posts, oAuthResponse.User.Id.ToString());
             return View(posts.Distinct(compare));
         }
 
@@ -262,6 +260,68 @@ namespace InstaSharp.Sample.Mvc.Controllers
                 });
             }
             posts = posts.OrderBy(x => x.Distance).ToList();
+            return View(posts);
+        }
+
+        public async Task<ActionResult> FullInfo()
+        {
+            var oAuthResponse = Session["InstaSharp.AuthInfo"] as OAuthResponse;
+
+            if (oAuthResponse == null)
+            {
+                return RedirectToAction("Login");
+            }
+            var locations = new Endpoints.Media(config, oAuthResponse);
+            var geo = new Endpoints.Geographies(config, oAuthResponse);
+            var start = System.DateTime.Now - TimeSpan.FromDays(1);
+            var end = System.DateTime.Now;
+            var posts = new List<WallElement>();
+            return View(posts);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> FullInfo2(double latitude, double longitude)
+        {
+            if (latitude == 0)
+            {
+                return View();
+            }
+            ModelState.Clear();
+            var oAuthResponse = Session["InstaSharp.AuthInfo"] as OAuthResponse;
+            if (oAuthResponse == null)
+            {
+                return RedirectToAction("Login");
+            }
+            var InstagramId = oAuthResponse.User.Id.ToString();
+            var locations = new Endpoints.Media(config, oAuthResponse);
+            var geo = new Endpoints.Geographies(config, oAuthResponse);
+            var start = DateTime.Now - TimeSpan.FromDays(1);
+            var end = DateTime.Now;
+            var locFeed = await locations.Search(latitude, longitude, 5000, start, end);
+            var posts = new List<WallElement>();
+            foreach (var post in locFeed.Data)
+            {
+                var distance = CalculateDistance(latitude, post.Location.Latitude, longitude, post.Location.Longitude);
+                posts.Add(new WallElement()
+                {
+                    CreatedTime = post.CreatedTime.ToLocalTime(),
+                    FullName = post.User.FullName,
+                    Id = post.Id,
+                    Location = post.Location.Name,
+                    LocationId = post.Location.Id,
+                    Longitude = post.Location.Longitude,
+                    Latitude = post.Location.Latitude,
+                    ProfilePictureUrl = post.User.ProfilePicture,
+                    Distance = distance,
+                    StandardResolutionUrl = post.Images.StandardResolution.Url,
+                    LowResoltionUrl = post.Images.LowResolution.Url,
+                    ThumbnailUrl = post.Images.Thumbnail.Url,
+                    Username = post.User.Username,
+                    TempId = InstagramId + ".jpg"
+                });
+            }
+            posts = posts.OrderBy(x => x.Distance).ToList();
+            //var temp = CreateWall(posts, oAuthResponse.User.Id.ToString());
             return View(posts);
         }
 

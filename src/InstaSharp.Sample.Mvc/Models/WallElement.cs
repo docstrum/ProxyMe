@@ -16,6 +16,7 @@ namespace InstaSharp.Sample.Mvc.Models
         public string ProfilePictureUrl { get; set; }
         public string Username { get; set; }
         public string FullName { get; set; }
+        public string TempId  { get; set; }
         public DateTime CreatedTime { get; set; }
         public string StandardResolutionUrl { get; set; }
         public string LowResoltionUrl { get; set; }
