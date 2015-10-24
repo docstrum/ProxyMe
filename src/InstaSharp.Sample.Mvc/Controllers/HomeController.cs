@@ -10,7 +10,6 @@ using System.Net;
 using System.IO;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
-using System.Web;
 
 namespace InstaSharp.Sample.Mvc.Controllers
 {
@@ -18,8 +17,8 @@ namespace InstaSharp.Sample.Mvc.Controllers
     {
         static string clientId = "f14134ed24754b658b616e1ce855d350";
         static string clientSecret = "1262e676faeb4eb0a3b42928c4fc3147";
-        static string redirectUri = "http://localhost:5969/Home/OAuth";
-        //static string redirectUri = "http://www.proxme.net/Home/OAuth";
+        //static string redirectUri = "http://localhost:5969/Home/OAuth";
+        static string redirectUri = "http://www.proxme.net/Home/OAuth";
 
         InstagramConfig config = new InstagramConfig(clientId, clientSecret, redirectUri, "");
 
@@ -34,7 +33,7 @@ namespace InstaSharp.Sample.Mvc.Controllers
             {
                 return RedirectToAction("NearMe");
             }
-            return View(oAuthResponse.User);
+            //return View(oAuthResponse.User);
         }
 
         public ActionResult Login()
@@ -147,8 +146,8 @@ namespace InstaSharp.Sample.Mvc.Controllers
             }
             var locations = new Endpoints.Media(config, oAuthResponse);
             var geo = new Endpoints.Geographies(config, oAuthResponse);
-            var start = System.DateTime.Now - System.TimeSpan.FromDays(1);
-            var end = System.DateTime.Now;
+            var start = DateTime.Now - TimeSpan.FromDays(1);
+            var end = DateTime.Now;
             var locFeed = await locations.Search(latitude, longitude, 5000, start, end);
             var posts = new List<WallElement>();
             foreach (var post in locFeed.Data)
@@ -184,8 +183,8 @@ namespace InstaSharp.Sample.Mvc.Controllers
             }
             var locations = new Endpoints.Media(config, oAuthResponse);
             var geo = new Endpoints.Geographies(config, oAuthResponse);
-            var start = System.DateTime.Now - System.TimeSpan.FromDays(1);
-            var end = System.DateTime.Now;
+            var start = DateTime.Now - System.TimeSpan.FromDays(1);
+            var end = DateTime.Now;
             var posts = new List<WallElement>();
             return View(posts);
         }
@@ -201,8 +200,8 @@ namespace InstaSharp.Sample.Mvc.Controllers
             }
             var locations = new Endpoints.Media(config, oAuthResponse);
             var geo = new Endpoints.Geographies(config, oAuthResponse);
-            var start = System.DateTime.Now - System.TimeSpan.FromDays(1);
-            var end = System.DateTime.Now;
+            var start = DateTime.Now - System.TimeSpan.FromDays(1);
+            var end = DateTime.Now;
             var locFeed = await locations.Search(latitude, longitude, 5000, start, end);
             var posts = new List<WallElement>();
             foreach (var post in locFeed.Data)
@@ -276,16 +275,16 @@ namespace InstaSharp.Sample.Mvc.Controllers
 
         public double CalculateDistance(double Lat1, double Lat2, double Lon1, double Lon2)
         {
-            var lat1 = Lat1 * System.Math.PI / 180.0;
-            var lon1 = Lon1 * System.Math.PI / 180.0;
-            var lat2 = Lat2 * System.Math.PI / 180.0;
-            var lon2 = Lon2 * System.Math.PI / 180.0;
+            var lat1 = Lat1 * Math.PI / 180.0;
+            var lon1 = Lon1 * Math.PI / 180.0;
+            var lat2 = Lat2 * Math.PI / 180.0;
+            var lon2 = Lon2 * Math.PI / 180.0;
             var dlat = lat2 - lat1;
             var dlon = lon2 - lon1;
-            var a = System.Math.Pow(System.Math.Sin(dlat / 2), 2) + System.Math.Cos(lat1) * System.Math.Cos(lat2) * System.Math.Pow(System.Math.Sin(dlon / 2), 2);
-            var c = 2 * System.Math.Atan2(System.Math.Sqrt(a), System.Math.Sqrt(1 - a));
+            var a = Math.Pow(Math.Sin(dlat / 2), 2) + Math.Cos(lat1) * Math.Cos(lat2) * Math.Pow(Math.Sin(dlon / 2), 2);
+            var c = 2 * Math.Atan2(Math.Sqrt(a), Math.Sqrt(1 - a));
             var d = 3961 * c; //use 6373 for km
-            var distance = System.Math.Round(d * 100) / 100;
+            var distance = Math.Round(d * 100) / 100;
             return distance;
         }
 
@@ -324,7 +323,7 @@ namespace InstaSharp.Sample.Mvc.Controllers
                                 g.DrawImage(webImg, x + borderSize, y + borderSize, imageWidth, imageHeight);
                                 //pen.Alignment = System.Drawing.Drawing2D.PenAlignment.Inset;
                                 g.DrawRectangle(pen, x, y, imageWidth + 2 * borderSize - 1, imageHeight + 2 * borderSize - 1);
-                                
+
                             }
                         }
                     }
@@ -349,14 +348,14 @@ namespace InstaSharp.Sample.Mvc.Controllers
                     if (rows > 3)
                     {
                         // Create back box brush
-                        Rectangle rect = new Rectangle(0, 0, maxWidth , imageHeight);
+                        Rectangle rect = new Rectangle(0, 0, maxWidth, imageHeight);
                         //top gradient
                         using (LinearGradientBrush lgBrush = new LinearGradientBrush(rect, Color.White, Color.Transparent, LinearGradientMode.Vertical))
                         {
                             g.FillRectangle(lgBrush, rect);
                         }
                         //bottom gradient
-                        rect = new Rectangle(0, maxHeight - imageHeight, maxWidth , imageHeight);
+                        rect = new Rectangle(0, maxHeight - imageHeight, maxWidth, imageHeight);
                         using (LinearGradientBrush lgBrush = new LinearGradientBrush(rect, Color.Transparent, Color.White, LinearGradientMode.Vertical))
                         {
                             g.FillRectangle(lgBrush, rect);
