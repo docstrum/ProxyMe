@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace InstaSharp.Sample.Mvc.Models
+namespace FRED.Proxme.Mvc.Models
 {
     public class WallElement
     {

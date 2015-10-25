@@ -1,5 +1,5 @@
 ﻿using InstaSharp.Models.Responses;
-using InstaSharp.Sample.Mvc.Models;
+using FRED.Proxme.Mvc.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Linq;
@@ -10,21 +10,22 @@ using System.Net;
 using System.IO;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
+using InstaSharp;
 
-namespace InstaSharp.Sample.Mvc.Controllers
+namespace FRED.Proxme.Mvc.Controllers
 {
     public class HomeController : Controller
     {
         static string clientId = "f14134ed24754b658b616e1ce855d350";
         static string clientSecret = "1262e676faeb4eb0a3b42928c4fc3147";
-        //static string redirectUri = "http://localhost:5969/Home/OAuth";
-        static string redirectUri = "http://www.proxme.net/Home/OAuth";
+        static string redirectUri = "http://localhost:5969/Home/OAuth";
+        //static string redirectUri = "http://www.proxme.net/Home/OAuth";
 
         InstagramConfig config = new InstagramConfig(clientId, clientSecret, redirectUri, "");
 
         public ActionResult Index()
         {
-            var oAuthResponse = Session["InstaSharp.AuthInfo"] as OAuthResponse;
+            var oAuthResponse = Session["FRED.AuthInfo"] as OAuthResponse;
             if (oAuthResponse == null)
             {
                 return RedirectToAction("Login");
@@ -47,12 +48,12 @@ namespace InstaSharp.Sample.Mvc.Controllers
 
         public async Task<ActionResult> MyFeed()
         {
-            var oAuthResponse = Session["InstaSharp.AuthInfo"] as OAuthResponse;
+            var oAuthResponse = Session["FRED.AuthInfo"] as OAuthResponse;
             if (oAuthResponse == null)
             {
                 return RedirectToAction("Login");
             }
-            var users = new Endpoints.Users(config, oAuthResponse);
+            var users = new InstaSharp.Endpoints.Users(config, oAuthResponse);
             var feed = await users.Feed(null, null, null);
             var posts = new List<WallElement>();
             foreach (var post in feed.Data)
@@ -81,12 +82,12 @@ namespace InstaSharp.Sample.Mvc.Controllers
 
         public async Task<ActionResult> MyPosts()
         {
-            var oAuthResponse = Session["InstaSharp.AuthInfo"] as OAuthResponse;
+            var oAuthResponse = Session["FRED.AuthInfo"] as OAuthResponse;
             if (oAuthResponse == null)
             {
                 return RedirectToAction("Login");
             }
-            var users = new Endpoints.Users(config, oAuthResponse);
+            var users = new InstaSharp.Endpoints.Users(config, oAuthResponse);
             var feed = await users.RecentSelf();
             var posts = new List<WallElement>();
             foreach (var post in feed.Data)
@@ -116,16 +117,16 @@ namespace InstaSharp.Sample.Mvc.Controllers
 
         public async Task<ActionResult> NearMe()
         {
-            var oAuthResponse = Session["InstaSharp.AuthInfo"] as OAuthResponse;
+            var oAuthResponse = Session["FRED.AuthInfo"] as OAuthResponse;
 
             if (oAuthResponse == null)
             {
                 return RedirectToAction("Login");
             }
-            var locations = new Endpoints.Media(config, oAuthResponse);
-            var geo = new Endpoints.Geographies(config, oAuthResponse);
-            var start = System.DateTime.Now - TimeSpan.FromDays(1);
-            var end = System.DateTime.Now;
+            var locations = new InstaSharp.Endpoints.Media(config, oAuthResponse);
+            var geo = new InstaSharp.Endpoints.Geographies(config, oAuthResponse);
+            var start = DateTime.Now - TimeSpan.FromDays(1);
+            var end = DateTime.Now;
             var posts = new List<WallElement>();
             return View(posts);
         }
@@ -138,13 +139,13 @@ namespace InstaSharp.Sample.Mvc.Controllers
                 return View();
             }
             ModelState.Clear();
-            var oAuthResponse = Session["InstaSharp.AuthInfo"] as OAuthResponse;
+            var oAuthResponse = Session["FRED.AuthInfo"] as OAuthResponse;
             if (oAuthResponse == null)
             {
                 return RedirectToAction("Login");
             }
-            var locations = new Endpoints.Media(config, oAuthResponse);
-            var geo = new Endpoints.Geographies(config, oAuthResponse);
+            var locations = new InstaSharp.Endpoints.Media(config, oAuthResponse);
+            var geo = new InstaSharp.Endpoints.Geographies(config, oAuthResponse);
             var start = DateTime.Now - TimeSpan.FromDays(1);
             var end = DateTime.Now;
             var locFeed = await locations.Search(latitude, longitude, 5000, start, end);
@@ -175,13 +176,13 @@ namespace InstaSharp.Sample.Mvc.Controllers
 
         public async Task<ActionResult> WhoIsNear()
         {
-            var oAuthResponse = Session["InstaSharp.AuthInfo"] as OAuthResponse;
+            var oAuthResponse = Session["FRED.AuthInfo"] as OAuthResponse;
             if (oAuthResponse == null)
             {
                 return RedirectToAction("Login");
             }
-            var locations = new Endpoints.Media(config, oAuthResponse);
-            var geo = new Endpoints.Geographies(config, oAuthResponse);
+            var locations = new InstaSharp.Endpoints.Media(config, oAuthResponse);
+            var geo = new InstaSharp.Endpoints.Geographies(config, oAuthResponse);
             var start = DateTime.Now - TimeSpan.FromDays(1);
             var end = DateTime.Now;
             var posts = new List<WallElement>();
@@ -192,13 +193,13 @@ namespace InstaSharp.Sample.Mvc.Controllers
         public async Task<ActionResult> WhoIsNear2(double latitude, double longitude)
         {
             ModelState.Clear();
-            var oAuthResponse = Session["InstaSharp.AuthInfo"] as OAuthResponse;
+            var oAuthResponse = Session["FRED.AuthInfo"] as OAuthResponse;
             if (oAuthResponse == null)
             {
                 return RedirectToAction("Login");
             }
-            var locations = new Endpoints.Media(config, oAuthResponse);
-            var geo = new Endpoints.Geographies(config, oAuthResponse);
+            var locations = new InstaSharp.Endpoints.Media(config, oAuthResponse);
+            var geo = new InstaSharp.Endpoints.Geographies(config, oAuthResponse);
             var start = DateTime.Now - TimeSpan.FromDays(1);
             var end = DateTime.Now;
             var locFeed = await locations.Search(latitude, longitude, 5000, start, end);
@@ -230,12 +231,12 @@ namespace InstaSharp.Sample.Mvc.Controllers
 
         public async Task<ActionResult> UserFeed(string usercode)
         {
-            var oAuthResponse = Session["InstaSharp.AuthInfo"] as OAuthResponse;
+            var oAuthResponse = Session["FRED.AuthInfo"] as OAuthResponse;
             if (oAuthResponse == null)
             {
                 return RedirectToAction("Login");
             }
-            var users = new Endpoints.Users(config, oAuthResponse);
+            var users = new InstaSharp.Endpoints.Users(config, oAuthResponse);
             var feed = await users.Recent(usercode);
             var posts = new List<WallElement>();
             foreach (var post in feed.Data)
@@ -265,16 +266,16 @@ namespace InstaSharp.Sample.Mvc.Controllers
 
         public async Task<ActionResult> FullInfo()
         {
-            var oAuthResponse = Session["InstaSharp.AuthInfo"] as OAuthResponse;
+            var oAuthResponse = Session["FRED.AuthInfo"] as OAuthResponse;
 
             if (oAuthResponse == null)
             {
                 return RedirectToAction("Login");
             }
             var locations = new Endpoints.Media(config, oAuthResponse);
-            var geo = new Endpoints.Geographies(config, oAuthResponse);
-            var start = System.DateTime.Now - TimeSpan.FromDays(1);
-            var end = System.DateTime.Now;
+            var geo = new InstaSharp.Endpoints.Geographies(config, oAuthResponse);
+            var start = DateTime.Now - TimeSpan.FromDays(1);
+            var end = DateTime.Now;
             var posts = new List<WallElement>();
             return View(posts);
         }
@@ -287,14 +288,14 @@ namespace InstaSharp.Sample.Mvc.Controllers
                 return View();
             }
             ModelState.Clear();
-            var oAuthResponse = Session["InstaSharp.AuthInfo"] as OAuthResponse;
+            var oAuthResponse = Session["FRED.AuthInfo"] as OAuthResponse;
             if (oAuthResponse == null)
             {
                 return RedirectToAction("Login");
             }
             var InstagramId = oAuthResponse.User.Id.ToString();
-            var locations = new Endpoints.Media(config, oAuthResponse);
-            var geo = new Endpoints.Geographies(config, oAuthResponse);
+            var locations = new InstaSharp.Endpoints.Media(config, oAuthResponse);
+            var geo = new InstaSharp.Endpoints.Geographies(config, oAuthResponse);
             var start = DateTime.Now - TimeSpan.FromDays(1);
             var end = DateTime.Now;
             var locFeed = await locations.Search(latitude, longitude, 5000, start, end);
@@ -329,7 +330,7 @@ namespace InstaSharp.Sample.Mvc.Controllers
         {
             var auth = new OAuth(config);
             var oauthResponse = await auth.RequestToken(code);
-            Session.Add("InstaSharp.AuthInfo", oauthResponse);
+            Session.Add("FRED.AuthInfo", oauthResponse);
             return RedirectToAction("Index");
         }
 
