@@ -321,7 +321,7 @@ namespace InstaSharp.Sample.Mvc.Controllers
                 });
             }
             posts = posts.OrderBy(x => x.Distance).ToList();
-            //var temp = CreateWall(posts, oAuthResponse.User.Id.ToString());
+            var temp = CreateWall(posts, oAuthResponse.User.Id.ToString());
             return View(posts);
         }
 

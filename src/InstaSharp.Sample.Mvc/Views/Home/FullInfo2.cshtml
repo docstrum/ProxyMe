@@ -3,16 +3,16 @@
 @{ Layout = null; }
 
 <!--script>
-        var scx = (document.getElementById("divTest4").scrollWidth - document.getElementById("divTest4").offsetWidth) / 2;
+        /*var scx = (document.getElementById("divTest4").scrollWidth - document.getElementById("divTest4").offsetWidth) / 2;
         var scy = (document.getElementById("divTest4").scrollHeight - document.getElementById("divTest4").offsetHeight) / 2;
-        document.getElementById("divTest4").scrollTop = scy;
+        document.getElementById("divTest4").scrollTop = scy;*/
 </script-->
 
 @if (Model != null)
 {
     foreach (var item in Model)
     {
-        <div id="divTest4" class=".col-md-4">
+        <div class=".col-md-4">
 
             <img src="/Images/temp/@Model.FirstOrDefault().TempId" />
 
