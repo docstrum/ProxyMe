@@ -58,23 +58,7 @@ namespace FRED.Proxme.Mvc.Controllers
             var posts = new List<WallElement>();
             foreach (var post in feed.Data)
             {
-                posts.Add(new WallElement()
-                {
-                    CreatedTime = post.CreatedTime.ToLocalTime(),
-                    FullName = post.User.FullName,
-                    Id = post.Id,
-                    Location = (post.Location != null ? post.Location.Name : null),
-                    LocationId = (post.Location != null ? post.Location.Id : 0),
-                    Longitude = (post.Location != null ? post.Location.Longitude : 0),
-                    Latitude = (post.Location != null ? post.Location.Latitude : 0),
-                    ProfilePictureUrl = post.User.ProfilePicture,
-                    Distance = 0, //distance,
-                    StandardResolutionUrl = post.Images.StandardResolution.Url,
-                    LowResoltionUrl = post.Images.LowResolution.Url,
-                    ThumbnailUrl = post.Images.Thumbnail.Url,
-                    Username = post.User.Username,
-                    VideoUrl = (post.Videos != null ? post.Videos.StandardResolution.Url : "")
-                });
+                posts.Add(InstsharpMedia2WallElement(post, 0, 0));
             }
             posts = posts.OrderBy(x => x.Distance).ToList();
             return View(posts);
@@ -92,24 +76,7 @@ namespace FRED.Proxme.Mvc.Controllers
             var posts = new List<WallElement>();
             foreach (var post in feed.Data)
             {
-                //var distance = CalculateDistance(latitude, post.Location.Latitude, longitude, post.Location.Longitude);
-                posts.Add(new WallElement()
-                {
-                    CreatedTime = post.CreatedTime.ToLocalTime(),
-                    FullName = post.User.FullName,
-                    Id = post.Id,
-                    Location = (post.Location != null ? post.Location.Name : null),
-                    LocationId = (post.Location != null ? post.Location.Id : 0),
-                    Longitude = 0, //post.Location.Longitude,
-                    Latitude = 0, //post.Location.Latitude,
-                    ProfilePictureUrl = post.User.ProfilePicture,
-                    Distance = 0, //distance,
-                    StandardResolutionUrl = post.Images.StandardResolution.Url,
-                    LowResoltionUrl = post.Images.LowResolution.Url,
-                    ThumbnailUrl = post.Images.Thumbnail.Url,
-                    Username = post.User.Username,
-                    VideoUrl = (post.Videos != null ? post.Videos.StandardResolution.Url : "")
-                });
+                posts.Add(InstsharpMedia2WallElement(post, 0, 0));
             }
             posts = posts.OrderBy(x => x.Distance).ToList();
             return View(posts);
@@ -152,23 +119,7 @@ namespace FRED.Proxme.Mvc.Controllers
             var posts = new List<WallElement>();
             foreach (var post in locFeed.Data)
             {
-                var distance = CalculateDistance(latitude, post.Location.Latitude, longitude, post.Location.Longitude);
-                posts.Add(new WallElement()
-                {
-                    CreatedTime = post.CreatedTime.ToLocalTime(),
-                    FullName = post.User.FullName,
-                    Id = post.Id,
-                    Location = post.Location.Name,
-                    LocationId = post.Location.Id,
-                    Longitude = post.Location.Longitude,
-                    Latitude = post.Location.Latitude,
-                    ProfilePictureUrl = post.User.ProfilePicture,
-                    Distance = distance,
-                    StandardResolutionUrl = post.Images.StandardResolution.Url,
-                    LowResoltionUrl = post.Images.LowResolution.Url,
-                    ThumbnailUrl = post.Images.Thumbnail.Url,
-                    Username = post.User.Username
-                });
+                posts.Add(InstsharpMedia2WallElement(post, latitude, longitude));
             }
             posts = posts.OrderBy(x => x.Distance).ToList();
             return View(posts);
@@ -206,23 +157,7 @@ namespace FRED.Proxme.Mvc.Controllers
             var posts = new List<WallElement>();
             foreach (var post in locFeed.Data)
             {
-                var distance = CalculateDistance(latitude, post.Location.Latitude, longitude, post.Location.Longitude);
-                posts.Add(new WallElement()
-                {
-                    CreatedTime = post.CreatedTime.ToLocalTime(),
-                    FullName = post.User.FullName,
-                    Id = post.Id,
-                    Location = post.Location.Name,
-                    LocationId = post.Location.Id,
-                    Longitude = post.Location.Longitude,
-                    Latitude = post.Location.Latitude,
-                    ProfilePictureUrl = post.User.ProfilePicture,
-                    Distance = distance,
-                    StandardResolutionUrl = post.Images.StandardResolution.Url,
-                    LowResoltionUrl = post.Images.LowResolution.Url,
-                    ThumbnailUrl = post.Images.Thumbnail.Url,
-                    Username = post.User.Username
-                });
+                posts.Add(InstsharpMedia2WallElement(post, latitude, longitude));
             }
             posts = posts.OrderBy(x => x.Distance).ToList();
             var compare = new WallElementComparer();
@@ -241,24 +176,7 @@ namespace FRED.Proxme.Mvc.Controllers
             var posts = new List<WallElement>();
             foreach (var post in feed.Data)
             {
-                //var distance = (post.Location != null ? CalculateDistance(latitude, post.Location.Latitude, longitude, post.Location.Longitude) : 0);
-                posts.Add(new WallElement()
-                {
-                    CreatedTime = post.CreatedTime.ToLocalTime(),
-                    FullName = post.User.FullName,
-                    Id = post.Id,
-                    Location = (post.Location != null ? post.Location.Name : null),
-                    LocationId = (post.Location != null ? post.Location.Id : 0),
-                    Longitude = (post.Location != null ? post.Location.Longitude : 0),
-                    Latitude = (post.Location != null ? post.Location.Latitude : 0),
-                    ProfilePictureUrl = post.User.ProfilePicture,
-                    Distance = 0, //distance,
-                    StandardResolutionUrl = post.Images.StandardResolution.Url,
-                    LowResoltionUrl = post.Images.LowResolution.Url,
-                    ThumbnailUrl = post.Images.Thumbnail.Url,
-                    Username = post.User.Username,
-                    VideoUrl = (post.Videos != null ? post.Videos.StandardResolution.Url : "")
-                });
+                posts.Add(InstsharpMedia2WallElement(post, 0, 0));
             }
             posts = posts.OrderBy(x => x.Distance).ToList();
             return View(posts);
@@ -302,24 +220,7 @@ namespace FRED.Proxme.Mvc.Controllers
             var posts = new List<WallElement>();
             foreach (var post in locFeed.Data)
             {
-                var distance = CalculateDistance(latitude, post.Location.Latitude, longitude, post.Location.Longitude);
-                posts.Add(new WallElement()
-                {
-                    CreatedTime = post.CreatedTime.ToLocalTime(),
-                    FullName = post.User.FullName,
-                    Id = post.Id,
-                    Location = post.Location.Name,
-                    LocationId = post.Location.Id,
-                    Longitude = post.Location.Longitude,
-                    Latitude = post.Location.Latitude,
-                    ProfilePictureUrl = post.User.ProfilePicture,
-                    Distance = distance,
-                    StandardResolutionUrl = post.Images.StandardResolution.Url,
-                    LowResoltionUrl = post.Images.LowResolution.Url,
-                    ThumbnailUrl = post.Images.Thumbnail.Url,
-                    Username = post.User.Username,
-                    TempId = InstagramId + ".jpg"
-                });
+                posts.Add(InstsharpMedia2WallElement(post, latitude, longitude));
             }
             posts = posts.OrderBy(x => x.Distance).ToList();
             var temp = CreateWall(posts, oAuthResponse.User.Id.ToString());
@@ -332,6 +233,37 @@ namespace FRED.Proxme.Mvc.Controllers
             var oauthResponse = await auth.RequestToken(code);
             Session.Add("FRED.AuthInfo", oauthResponse);
             return RedirectToAction("Index");
+        }
+
+        public WallElement InstsharpMedia2WallElement(InstaSharp.Models.Media post, double latitude, double longitude)
+        {
+            var wall = new WallElement
+            {
+                CreatedTime = post.CreatedTime.ToLocalTime(),
+                FullName = post.User.FullName,
+                Id = post.Id,
+                Location = (post.Location != null ? post.Location.Name : null),
+                LocationId = (post.Location != null ? post.Location.Id : 0),
+                Longitude = (post.Location != null ? post.Location.Longitude : 0),
+                Latitude = (post.Location != null ? post.Location.Latitude : 0),
+                ProfilePictureUrl = post.User.ProfilePicture,
+                Distance = 0,
+                StandardResolutionUrl = post.Images.StandardResolution.Url,
+                PhotoHeight = post.Images.StandardResolution.Height,
+                PhotoWidth = post.Images.StandardResolution.Width,
+                LowResoltionUrl = post.Images.LowResolution.Url,
+                ThumbnailUrl = post.Images.Thumbnail.Url,
+                Username = post.User.Username,
+                VideoUrl = (post.Videos != null ? post.Videos.StandardResolution.Url : ""),
+                VideoHeight = (post.Videos != null ? post.Videos.StandardResolution.Height : 0),
+                VideoWidth = (post.Videos != null ? post.Videos.StandardResolution.Width : 0)
+            };
+            var distance = (post.Location != null ? CalculateDistance(latitude, post.Location.Latitude, longitude, post.Location.Longitude) : 0);
+            if (distance > 0)
+            {
+                wall.Distance = distance;
+            }
+            return wall;
         }
 
         public double CalculateDistance(double Lat1, double Lat2, double Lon1, double Lon2)

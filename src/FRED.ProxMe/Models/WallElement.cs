@@ -19,10 +19,14 @@ namespace FRED.Proxme.Mvc.Models
         public string TempId  { get; set; }
         public DateTime CreatedTime { get; set; }
         public string StandardResolutionUrl { get; set; }
+        public int PhotoHeight { get; set; }
+        public int PhotoWidth { get; set; }
         public string LowResoltionUrl { get; set; }
         public string ThumbnailUrl { get; set; }
         public double Distance { get; set; } 
         public string VideoUrl { get; set; }
+        public int VideoHeight { get; set; }
+        public int VideoWidth { get; set; }
         public CellCoordinats Cell { get; set; }
     }
 
