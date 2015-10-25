@@ -41,9 +41,12 @@
                             //var scy = (document.getElementById("wallDiv").scrollHeight - document.getElementById("wallDiv").offsetHeight) / 2;
                             //document.getElementById("wallDiv").scrollTop = scy;
                             var myDiv = $("#wallDiv");
-                            var scrollto = myDiv.offset().left + (myDiv.width() / 2);
-                            myDiv.animate({ scrollLeft: scrollto });
-                            alert("test");
+                            //var scrollto = myDiv.offset().left + (myDiv.width() / 2);
+                            //myDiv.animate({ 1500: 1500 });
+                            //alert("test");
+                            var speed = 0;
+                            $('html, body').animate({ scrollTop: 1500 }, speed);
+                            $('html, body').animate({ scrollLeft: 1500 }, speed);
                         }
                     }
                 });

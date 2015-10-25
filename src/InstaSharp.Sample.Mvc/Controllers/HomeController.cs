@@ -18,7 +18,7 @@ namespace InstaSharp.Sample.Mvc.Controllers
         static string clientId = "f14134ed24754b658b616e1ce855d350";
         static string clientSecret = "1262e676faeb4eb0a3b42928c4fc3147";
         static string redirectUri = "http://localhost:5969/Home/OAuth";
-        //tatic string redirectUri = "http://www.proxme.net/Home/OAuth";
+        //static string redirectUri = "http://www.proxme.net/Home/OAuth";
 
         InstagramConfig config = new InstagramConfig(clientId, clientSecret, redirectUri, "");
 
@@ -31,7 +31,7 @@ namespace InstaSharp.Sample.Mvc.Controllers
             }
             else
             {
-                return RedirectToAction("NearMe");
+                return RedirectToAction("FullInfo");
             }
             //return View(oAuthResponse.User);
         }
@@ -348,7 +348,7 @@ namespace InstaSharp.Sample.Mvc.Controllers
             return distance;
         }
 
-        private int imageWidth = 440, imageHeight = 440, maxWidth = 3000, maxHeight = 3000, borderSize = 1;
+        private int imageWidth = 428, imageHeight = 428, maxWidth = 3000, maxHeight = 3000, borderSize = 1;
 
 
         private List<WallElement> CreateWall(List<WallElement> model, string userName)
