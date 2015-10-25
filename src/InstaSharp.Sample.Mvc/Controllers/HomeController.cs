@@ -17,8 +17,8 @@ namespace InstaSharp.Sample.Mvc.Controllers
     {
         static string clientId = "f14134ed24754b658b616e1ce855d350";
         static string clientSecret = "1262e676faeb4eb0a3b42928c4fc3147";
-        static string redirectUri = "http://localhost:5969/Home/OAuth";
-        //static string redirectUri = "http://www.proxme.net/Home/OAuth";
+        //static string redirectUri = "http://localhost:5969/Home/OAuth";
+        static string redirectUri = "http://www.proxme.net/Home/OAuth";
 
         InstagramConfig config = new InstagramConfig(clientId, clientSecret, redirectUri, "");
 
@@ -31,7 +31,7 @@ namespace InstaSharp.Sample.Mvc.Controllers
             }
             else
             {
-                return RedirectToAction("FullInfo");
+                return RedirectToAction("NearMe");
             }
             //return View(oAuthResponse.User);
         }

@@ -37,16 +37,21 @@
                         $('#wait').hide();
                         $('#content').show();
                         if (document.getElementById("wallDiv")) {
-                            //var scx = (document.getElementById("wallDiv").scrollWidth - document.getElementById("wallDiv").offsetWidth) / 2;
-                            //var scy = (document.getElementById("wallDiv").scrollHeight - document.getElementById("wallDiv").offsetHeight) / 2;
-                            //document.getElementById("wallDiv").scrollTop = scy;
-                            var myDiv = $("#wallDiv");
-                            //var scrollto = myDiv.offset().left + (myDiv.width() / 2);
-                            //myDiv.animate({ 1500: 1500 });
-                            //alert("test");
-                            var speed = 0;
-                            $('html, body').animate({ scrollTop: 1500 }, speed);
-                            $('html, body').animate({ scrollLeft: 1500 }, speed);
+                            var el = $(e.target.getAttribute('href'));
+                            var elOffset = el.offset().top;
+                            var elHeight = el.height();
+                            var windowHeight = $(window).height();
+                            var windowWidth = $(window).width();
+                            windowWidth = windowWidth / 2;
+                            var offset;
+                            if (elHeight < windowHeight) {
+                                offset = elOffset - ((windowHeight / 2) - (elHeight / 2));
+                            }
+                            else {
+                                offset = elOffset;
+                            }
+                            $('html, body').animate({ scrollTop: offset }, speed);
+                            $('html, body').animate({ scrollLeft: windowWidth }, speed);
                         }
                     }
                 });
