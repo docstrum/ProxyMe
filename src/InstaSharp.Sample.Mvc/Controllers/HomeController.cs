@@ -17,8 +17,8 @@ namespace InstaSharp.Sample.Mvc.Controllers
     {
         static string clientId = "f14134ed24754b658b616e1ce855d350";
         static string clientSecret = "1262e676faeb4eb0a3b42928c4fc3147";
-        //static string redirectUri = "http://localhost:5969/Home/OAuth";
-        static string redirectUri = "http://www.proxme.net/Home/OAuth";
+        static string redirectUri = "http://localhost:5969/Home/OAuth";
+        //tatic string redirectUri = "http://www.proxme.net/Home/OAuth";
 
         InstagramConfig config = new InstagramConfig(clientId, clientSecret, redirectUri, "");
 
@@ -348,7 +348,7 @@ namespace InstaSharp.Sample.Mvc.Controllers
             return distance;
         }
 
-        private int imageWidth = 240, imageHeight = 240, maxWidth = 2000, maxHeight = 2000, borderSize = 1;
+        private int imageWidth = 440, imageHeight = 440, maxWidth = 3000, maxHeight = 3000, borderSize = 1;
 
 
         private List<WallElement> CreateWall(List<WallElement> model, string userName)
@@ -391,14 +391,14 @@ namespace InstaSharp.Sample.Mvc.Controllers
                     if (cols > 3)
                     {
                         // Create back box brush
-                        Rectangle rect = new Rectangle(0, 0, imageWidth, maxHeight);
+                        Rectangle rect = new Rectangle(0, 0, imageWidth/2, maxHeight);
                         //left side gradient
                         using (LinearGradientBrush lgBrush = new LinearGradientBrush(rect, Color.White, Color.Transparent, LinearGradientMode.Horizontal))
                         {
                             g.FillRectangle(lgBrush, rect);
                         }
                         //Right side gradient
-                        rect = new Rectangle(maxWidth - imageWidth, 0, imageWidth, maxHeight);
+                        rect = new Rectangle(maxWidth - (imageWidth/2), 0, imageWidth/2, maxHeight);
                         using (LinearGradientBrush lgBrush = new LinearGradientBrush(rect, Color.Transparent, Color.White, LinearGradientMode.Horizontal))
                         {
                             g.FillRectangle(lgBrush, rect);
@@ -408,14 +408,14 @@ namespace InstaSharp.Sample.Mvc.Controllers
                     if (rows > 3)
                     {
                         // Create back box brush
-                        Rectangle rect = new Rectangle(0, 0, maxWidth, imageHeight);
+                        Rectangle rect = new Rectangle(0, 0, maxWidth, imageHeight/2);
                         //top gradient
                         using (LinearGradientBrush lgBrush = new LinearGradientBrush(rect, Color.White, Color.Transparent, LinearGradientMode.Vertical))
                         {
                             g.FillRectangle(lgBrush, rect);
                         }
                         //bottom gradient
-                        rect = new Rectangle(0, maxHeight - imageHeight, maxWidth, imageHeight);
+                        rect = new Rectangle(0, maxHeight - (imageHeight/2), maxWidth, imageHeight/2);
                         using (LinearGradientBrush lgBrush = new LinearGradientBrush(rect, Color.Transparent, Color.White, LinearGradientMode.Vertical))
                         {
                             g.FillRectangle(lgBrush, rect);
