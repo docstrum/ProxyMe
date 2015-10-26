@@ -258,7 +258,7 @@ namespace FRED.Proxme.Mvc.Controllers
                 VideoHeight = (post.Videos != null ? post.Videos.StandardResolution.Height : 0),
                 VideoWidth = (post.Videos != null ? post.Videos.StandardResolution.Width : 0)
             };
-            var distance = (post.Location != null ? CalculateDistance(latitude, post.Location.Latitude, longitude, post.Location.Longitude) : 0);
+            var distance = (post.Location != null && latitude !=0 ? CalculateDistance(latitude, post.Location.Latitude, longitude, post.Location.Longitude) : 0);
             if (distance > 0)
             {
                 wall.Distance = distance;

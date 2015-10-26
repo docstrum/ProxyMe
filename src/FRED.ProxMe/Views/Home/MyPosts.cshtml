@@ -38,7 +38,7 @@
                             <td colspan="4">
                                 @if (string.IsNullOrWhiteSpace(item.VideoUrl))
                                 {
-                                    <img src="@item.StandardResolutionUrl" width="600" />
+                                    <img src="@item.StandardResolutionUrl" width="@item.PhotoWidth" height="@item.PhotoHeight" />
                                 }
                                 else
                                 {
@@ -77,8 +77,8 @@
                                             }
                                     </style>
                                     <div class="image-wrap">
-                                        <a href="@item.VideoUrl" class="html5lightbox" data-width="600" title="@item.Username">
-                                            <img src="@item.StandardResolutionUrl" width="600" />
+                                        <a href="@item.VideoUrl" class="html5lightbox" data-width="@item.VideoWidth" data-height="@item.VideoHeight" title="@item.Username">
+                                            <img src="@item.StandardResolutionUrl" width="@item.PhotoWidth" height="@item.PhotoHeight" />
                                             <div class="play-button"></div>
                                         </a>
                                     </div>
@@ -114,7 +114,7 @@
                             <td colspan="4">
                                 @if (string.IsNullOrWhiteSpace(item.VideoUrl))
                                 {
-                                    <img src="@item.StandardResolutionUrl" width="600" />
+                                    <img src="@item.StandardResolutionUrl" width="@item.PhotoWidth" height="@item.PhotoHeight" />
                                 }
                                 else
                                 {
@@ -153,8 +153,8 @@
                                             }
                                     </style>
                                     <div class="image-wrap">
-                                        <a href="@item.VideoUrl" class="html5lightbox" data-width="600" title="@item.Username">
-                                            <img src="@item.StandardResolutionUrl" width="600" />
+                                        <a href="@item.VideoUrl" class="html5lightbox" data-width="@item.VideoWidth" data-height="@item.VideoHeight" title="@item.Username">
+                                            <img src="@item.StandardResolutionUrl" width="@item.PhotoWidth" height="@item.PhotoHeight" />
                                             <div class="play-button"></div>
                                         </a>
                                     </div>
