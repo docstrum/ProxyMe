@@ -23,7 +23,9 @@ namespace FRED.Proxme.Mvc.Models
         public int PhotoWidth { get; set; }
         public string LowResoltionUrl { get; set; }
         public string ThumbnailUrl { get; set; }
-        public double Distance { get; set; } 
+        public double Distance { get; set; }
+        public double Bearing { get; set; }
+        public string Direction { get; set; }
         public string VideoUrl { get; set; }
         public int VideoHeight { get; set; }
         public int VideoWidth { get; set; }

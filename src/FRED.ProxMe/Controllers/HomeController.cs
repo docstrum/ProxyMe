@@ -223,7 +223,7 @@ namespace FRED.Proxme.Mvc.Controllers
                 posts.Add(InstsharpMedia2WallElement(post, latitude, longitude));
             }
             posts = posts.OrderBy(x => x.Distance).ToList();
-            var temp = CreateWall(posts, oAuthResponse.User.Id.ToString());
+            //var temp = CreateWall(posts, oAuthResponse.User.Id.ToString());
             return View(posts);
         }
 
@@ -262,6 +262,23 @@ namespace FRED.Proxme.Mvc.Controllers
             if (distance > 0)
             {
                 wall.Distance = distance;
+                wall.Bearing = (post.Location != null && latitude != 0 ? CalculateBearing(latitude, post.Location.Latitude, longitude, post.Location.Longitude) : 0);
+                if (wall.Bearing >= 337.5 || wall.Bearing <= 22.5)
+                    wall.Direction = "N";
+                else if (wall.Bearing > 22.5 && wall.Bearing < 67.5)
+                    wall.Direction = "NE";
+                else if (wall.Bearing >= 67.5 && wall.Bearing <= 112.5)
+                    wall.Direction = "E";
+                else if (wall.Bearing > 112.5 && wall.Bearing < 157.5)
+                    wall.Direction = "SE";
+                else if (wall.Bearing >= 157.5 && wall.Bearing <= 202.5)
+                    wall.Direction = "S";
+                else if (wall.Bearing > 202.5 && wall.Bearing < 247.5)
+                    wall.Direction = "SW";
+                else if (wall.Bearing >= 247.5 && wall.Bearing <= 292.5)
+                    wall.Direction = "W";
+                else if (wall.Bearing > 292.5 && wall.Bearing < 337.5)
+                    wall.Direction = "NE";
             }
             return wall;
         }
@@ -279,6 +296,20 @@ namespace FRED.Proxme.Mvc.Controllers
             var d = 3961 * c; //use 6373 for km
             var distance = Math.Round(d * 100) / 100;
             return distance;
+        }
+
+        public double CalculateBearing(double Lat1, double Lat2, double Lon1, double Lon2)
+        {
+            var lat1 = Lat1 * Math.PI / 180.0;
+            var lat2 = Lat2 * Math.PI / 180.0;
+            var a = lat1;
+            var b = lat2;
+            var c = (Lon2 - Lon1) * Math.PI / 180.0;   
+            var y = Math.Sin(c) * Math.Cos(b);
+            var x = Math.Cos(a) * Math.Sin(b) - Math.Sin(a) * Math.Cos(b) * Math.Cos(c);
+            var θ = Math.Atan2(y, x);
+            var bearing = ((θ * 180) / Math.PI) % 360;
+            return Math.Abs(bearing);
         }
 
         private int imageWidth = 428, imageHeight = 428, maxWidth = 3000, maxHeight = 3000, borderSize = 1;

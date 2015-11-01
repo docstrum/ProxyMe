@@ -6,18 +6,93 @@
 {
     foreach (var item in Model)
     {
-        <div id="wallDiv" class=".col-md-4">
+        <div class=".col-md-4">
+            <center>
+                <table border="0" width="600" cellpadding="10" cellspacing="0">
+                    <tr>
+                        <td width="100">
+                            <img src="@item.ProfilePictureUrl" width="100" />
+                        </td>
+                        <td width="100">
+                            User Name:
+                            <br />
+                            Full Name:
+                            <br />
+                            Posted:
+                        </td>
+                        <td width="200">
+                            <b>@item.Username</b>
+                            <br />
+                            <b>@item.FullName</b>
+                            <br />
+                            <b>@item.CreatedTime.AddHours(-4)</b>
+                        </td>
+                        <td width="200">
+                            Location: <b>@item.Location</b>
+                            <br />
+                            @item.Direction @item.Distance Miles Away
+                            <br />
+                            &nbsp;
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="4">
+                            @if (string.IsNullOrWhiteSpace(item.VideoUrl))
+                            {
+                                <img src="@item.StandardResolutionUrl" width="@item.PhotoWidth" height="@item.PhotoHeight" />
+                            }
+                            else
+                            {
 
-            <img src="/Images/temp/@Model.FirstOrDefault().TempId" />
+                                <style>
+                                    .image-wrap {
+                                        position: relative;
+                                        display: inline-block;
+                                    }
 
+                                    .play-button {
+                                        position: absolute;
+                                        width: 60px;
+                                        height: 60px;
+                                        background-color: rgba(0,0,0,0.25);
+                                        border-radius: 100%;
+                                        top: 50%;
+                                        left: 50%;
+                                        margin: -30px 0 0 -30px;
+                                        cursor: pointer;
+                                    }
+
+                                        .play-button:after {
+                                            content: '';
+                                            display: block;
+                                            position: absolute;
+                                            left: 22px;
+                                            top: 10px;
+                                            border-width: 20px;
+                                            border-style: solid;
+                                            border-color: transparent transparent transparent white;
+                                        }
+
+                                        .play-button:hover {
+                                            background-color: black;
+                                        }
+                                </style>
+                                <div class="image-wrap">
+                                    <a href="@item.VideoUrl" class="html5lightbox" data-width="@item.VideoWidth" data-height="@item.VideoHeight" title="@item.Username">
+                                        <img src="@item.StandardResolutionUrl" width="@item.PhotoWidth" height="@item.PhotoHeight" />
+                                        <div class="play-button"></div>
+                                    </a>
+                                </div>
+                            }
+                        </td>
+
+                    </tr>
+                </table>
+                <br />
+            </center>
         </div>
-        
 
-        break;
     }
-
-
-
 }
 else
 {
